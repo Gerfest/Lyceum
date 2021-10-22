@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/index.css' %}">
+{% endblock %}
+
+{% block content %}
+    <section class="section1-bg"
+             style="background-image: url('{% static 'img/photo01.jpg' %}')"
+             data-paroller-factor="0.3" data-paroller-type="background"
+             data-paroller-direction="vertical"
+    >
+        <div class="section1">
+            <div class="sec1-main">
+                <h1>Портал<br>Багатопрофільного Ліцею</h1>
+                <a href="http://litsey.sd.ua/"
+                   class="lyceum-site-btn btn btn-danger" type="button"
+                   class="btn btn-danger">Читати більше</a>
+            </div>
+            <div class="sec1-add">
+
+            </div>
+        </div>
+    </section>
+{% endblock %}
+
+{% block js %}
+    <script>
+    $('.section1-bg').paroller();
+    </script>
+{% endblock %}

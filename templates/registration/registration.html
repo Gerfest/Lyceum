@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+{% endblock %}
+
+{% block content %}
+    <form method="post">
+            {% csrf_token %}
+            {% for field in registration_form %}
+                <div class="reg-field form-group">
+                    <label class="form-label" style='font-size: 20px; line-height: 30px;' for="{{ field.name }}">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.help_text %}
+                        <small class="form-text text-muted">
+                            {{ field.help_text }}
+                        </small>
+                    {% endif %}
+                    <small class="form-text error-text">
+                        {% for error in field.errors %}
+                            {{ error }}<br>
+                        {% endfor %}
+                    </small>
+                </div>
+            {% endfor %}
+            <p class="form-text text-muted" style="margin: 20px;">
+                By clicking "Register", you confirm that you have read and
+                fully understand our terms of service and confidentiality policies.
+            </p>
+            <button class="button btn btn-primary submit_button" type="submit">
+                Register
+            </button>
+        </form>
+
+{% endblock %}

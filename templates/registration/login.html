@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+{% endblock %}
+
+{% block content %}
+    <section class="main-sec">
+        <form method="post">
+            {% csrf_token %}
+            {% for field in login_form %}
+                <div class="reg-field">
+                    <label class="form-label"
+                           style='font-size: 20px; line-height: 30px;'
+                           for="{{ field.name }}">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.help_text %}
+                        <span>{{ field.help_text }}</span>
+                    {% endif %}
+                    {% for error in field.errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+            <button name="login" id="login"
+                    class="button btn btn-primary submit_button"
+                    style='margin: 15px;' type="submit">
+                Login
+            </button>
+        </form>
+        <div><hr><p>Немає акаунта?</p><a href="/signup/" class="btn btn-danger">Зарееструйтеся!</a><hr></div>
+    </section>
+{% endblock %}
