@@ -1,7 +1,5 @@
 from django.contrib.auth.models import User
 from django.db import models
-import secrets
-import string
 
 
 class Class(models.Model):
@@ -39,14 +37,7 @@ class Invitation(models.Model):
     invitor = models.ForeignKey(to=User, on_delete=models.CASCADE,
                                 related_name='invitor')
     activated = models.BooleanField(default=False)
-    student = models.OneToOneField(to=Student, on_delete=models.CASCADE,
-                                   null=True,
-                                   related_name='student')
-
-    @classmethod
-    def create(cls, invitor, size=10):
-        invitation = cls(invitor=invitor)
-        alphabet = string.ascii_letters + string.digits
-        code = ''.join(secrets.choice(alphabet) for _ in range(size))
-        invitation.code = code
-        return invitation
+    user = models.ForeignKey(to=User, on_delete=models.CASCADE,
+                             null=True,
+                             related_name='user')
+    type = models.CharField(max_length=100, default="Student")

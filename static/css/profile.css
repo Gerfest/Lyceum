@@ -1,6 +1,11 @@
-thead {
+table {
     text-align: center;
 }
 .codes {
     width: 50%;
+}
+section {
+    margin: 20px;
+    padding: 20px;
+    background-color: rgba(0, 0, 0, 0.05);
 }
