@@ -4,7 +4,6 @@ from django.shortcuts import render, redirect
 from django.views import View
 
 from Website.forms import SignUpForm, LoginForm
-from Website.models import Invitation, Student
 
 
 class BaseView(View):
@@ -101,30 +100,11 @@ class SignupView(BaseView):
         form = SignUpForm(request.POST)
         if form.is_valid():
             if not User.objects.filter(email=form.data['email']).exists():
-                invitation = Invitation.objects.filter(
-                    code=form.data['invitation_code'],
-                    activated=False).first()
-                if invitation:
-                    form.save()
-                    Student.objects.create(user=User.objects.get(email=form.data['email']))
-                    print("form saved")
-                    login(request,
-                          authenticate(
-                              username=form.cleaned_data.get('username'),
-                              password=form.cleaned_data.get('password1')))
-                    print("logined")
-                    invitation.activated = True
-                    print("activated")
-                    invitation.student = Student.objects.get(
-                        user=User.objects.get(email=form.data['email']))
-                    print("student added")
-                    print(invitation)
-                    invitation.save()
-                    print("saved")
-                    return redirect('home')
-                else:
-                    message = [
-                        'Введено невірний код, або цей код вже використано']
+                form.save()
+                login(request,
+                      authenticate(username=form.cleaned_data.get('username'),
+                                   password=form.cleaned_data.get('password1')))
+                return redirect('home')
             else:
                 message = ['Пользователь с таким же email уже существует']
         else:
