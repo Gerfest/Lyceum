@@ -1,10 +1,11 @@
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
 from django.views import View
 
 from Website.forms import SignUpForm, LoginForm
-from Website.models import Invitation, Student
+from Website.models import Invitation, Student, Teacher
 
 
 class BaseView(View):
@@ -106,7 +107,8 @@ class SignupView(BaseView):
                     activated=False).first()
                 if invitation:
                     form.save()
-                    Student.objects.create(user=User.objects.get(email=form.data['email']))
+                    Student.objects.create(
+                        user=User.objects.get(email=form.data['email']))
                     print("form saved")
                     login(request,
                           authenticate(
@@ -157,6 +159,39 @@ class ProfileView(BaseView):
     def __init__(self):
         super().__init__()
         self.template_name = 'profile.html'
+
+    def get(self, request):
+        super().get(request)
+        if not request.user.is_authenticated:
+            return redirect('login')
+        self.context.update({"user": request.user})
+        user_type = []
+        if Student.objects.filter(user=request.user).exists():
+            user_type.append("student")
+            self.context.update(
+                {"student": Student.objects.get(user=request.user)})
+        if Teacher.objects.filter(user=request.user).exists():
+            user_type.append("teacher")
+            self.context.update(
+                {"teacher": Teacher.objects.get(user=request.user)})
+        self.context.update({"user_type": user_type})
+        all_codes = Invitation.objects.filter(invitor=request.user)
+        codes_non_activated = all_codes.filter(activated=False)
+        codes_activated = all_codes.filter(activated=True)
+        codes = []
+        for i in range(max(len(codes_activated), len(codes_non_activated))):
+            codes.append(
+                [i,
+                 codes_non_activated[i] if i < len(codes_non_activated) else "",
+                 codes_activated[i] if i < len(codes_activated) else ""])
+        self.context.update({"codes": codes})
+        return self.base_render(request)
+
+
+class ScheduleView(BaseView):
+    def __init__(self):
+        super().__init__()
+        self.template_name = 'schedule.html'
 
     def get(self, request):
         super().get(request)

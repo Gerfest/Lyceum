@@ -34,3 +34,15 @@
     flex-direction: column;
     justify-content: space-around;
 }
+
+.section2 {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+}
+
+.teachers {
+    display: grid;
+
+}

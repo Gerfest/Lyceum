@@ -2,15 +2,52 @@
 {% load static %}
 
 {% block css %}
-    <link rel="stylesheet" href="{% static '' %}">
+    <link rel="stylesheet" href="{% static 'css/profile.css' %}">
 {% endblock %}
 
 {% block content %}
     <section class="sec1">
-        <p>Ім'я: </p>
-        <p>Призвище: </p>
-        <p>Логін: </p>
+        <p>Ім'я користувача: {{ user.username }}</p>
+        <p>Email: {{ user.email }}</p>
+        <p>Ім'я: {{ user.first_name }}</p>
+        <p>Призвище: {{ user.last_name }}</p>
+        {% if "student" in user_type %}
+            <p>Клас: {{ student.s_class }}</p>
+        {% endif %}
+        {% if "teacher" in user_type %}
+            <p>Предмети: {{ teacher.subjects.all|join:", " }}</p>
+        {% endif %}
     </section>
+    {% if "teacher" in user_type %}
+        <section>
+            <h3>Ваші коди для запрошення:</h3>
+            <table class="table codes table-bordered table-success table-striped">
+                <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Неактивовані</th>
+                    <th colspan="2" scope="col">Активовані</th>
+                </tr>
+                <tr>
+                    <th scope="col"></th>
+                    <th scope="col">Код</th>
+                    <th scope="col">Код</th>
+                    <th scope="col">Учень</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for code in codes %}
+                    <tr>
+                        <th scope="row">{{ code.0 }}</th>
+                        <td>{{ code.1.code }}</td>
+                        <td>{{ code.2.code }}</td>
+                        <td>{{ code.2.student }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </section>
+    {% endif %}
     <section>
         <a href="/logout/" class="btn btn-outline-danger">Вийти</a>
     </section>
