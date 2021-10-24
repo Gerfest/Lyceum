@@ -9,14 +9,13 @@
     <section class="section1-bg"
              style="background-image: url('{% static 'img/photo01.jpg' %}')"
              data-paroller-factor="0.3" data-paroller-type="background"
-             data-paroller-direction="vertical"
-    >
+             data-paroller-direction="vertical">
         <div class="section1">
             <div class="sec1-main">
                 <h1>Портал<br>Багатопрофільного Ліцею</h1>
                 <a href="http://litsey.sd.ua/"
-                   class="lyceum-site-btn btn btn-danger" type="button"
-                   class="btn btn-danger">Читати більше</a>
+                   class="lyceum-site-btn btn btn-danger" type="button">Читати
+                    більше</a>
             </div>
             <div class="sec1-add">
 
@@ -26,7 +25,18 @@
     <section class="section2">
         <h2>Наші вчителі</h2>
         <div class="teachers">
-
+            {% for teacher in teachers %}
+                <div class="card" style="width: 18rem;">
+                    <img src="{% static 'img/teacher.png' %}"
+                         class="card-img-top" alt="">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ teacher.user.first_name }} {{ teacher.user.last_name }}</h5>
+                        <p class="card-text">
+                            Предмети: {{ teacher.subjects.all|join:", " }}</p>
+                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                    </div>
+                </div>
+            {% endfor %}
         </div>
     </section>
 {% endblock %}

@@ -40,9 +40,15 @@
     justify-content: center;
     flex-direction: column;
     align-items: center;
+    padding: 10px;
 }
 
 .teachers {
-    display: grid;
+    display: flex;
+    flex-wrap: wrap;
 
+}
+
+.card {
+    margin: 10px;
 }

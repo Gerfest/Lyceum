@@ -66,6 +66,8 @@ class IndexView(BaseView):
 
     def get(self, request):
         super().get(request)
+        teachers = Teacher.objects.all()
+        self.context.update({"teachers": teachers})
         return self.base_render(request)
 
 
