@@ -2,15 +2,104 @@
 {% load static %}
 
 {% block css %}
-    <link rel="stylesheet" href="{% static '' %}">
+    <link rel="stylesheet" href="{% static 'css/profile.css' %}">
 {% endblock %}
 
 {% block content %}
     <section class="sec1">
-        <p>Ім'я: </p>
-        <p>Призвище: </p>
-        <p>Логін: </p>
+        <p>Ім'я користувача: {{ user.username }}</p>
+        <p>Email: {{ user.email }}</p>
+        <p>Ім'я: {{ user.first_name }}</p>
+        <p>Призвище: {{ user.last_name }}</p>
+        {% if "student" in user_type %}
+            <p>Клас: {{ student.s_class }}</p>
+        {% endif %}
+        {% if "teacher" in user_type %}
+            <p>Предмети: {{ teacher.subjects.all|join:", " }}</p>
+        {% endif %}
     </section>
+    {% if "teacher" in user_type %}
+        <section>
+            <h3>Ваші коди для запрошення:</h3>
+            <table class="table codes table-bordered table-success table-striped">
+                <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th colspan="3" scope="col">Неактивовані</th>
+                    <th colspan="3" scope="col">Активовані</th>
+                </tr>
+                <tr>
+                    <th scope="col"></th>
+                    <th scope="col">Код</th>
+                    <th scope="col">Тип</th>
+                    <th scope="col">Видалити</th>
+                    <th scope="col">Код</th>
+                    <th scope="col">Людина</th>
+                    <th scope="col">Тип</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for code in codes %}
+                    <tr>
+                        <th scope="row">{{ code.0 }}</th>
+                        <td>{{ code.1.code }}</td>
+                        <td>
+                            {% if code.1.type == "Student" %}
+                                Учень
+                            {% elif code.1.type == "Teacher" %}
+                                Вчитель
+                            {% endif %}
+                        </td>
+                        <td>
+                            <form method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="del_code"
+                                       value="{{ code.1.code }}">
+                                <button type="submit"
+                                        class="btn btn-outline-danger">
+                                    X
+                                </button>
+                            </form>
+                        </td>
+                        <td>{{ code.2.code }}</td>
+                        <td>{{ code.2.user.username }}</td>
+                        <td>
+                            {% if code.2.type == "Student" %}
+                                Учень
+                            {% elif code.2.type == "Teacher" %}
+                                Вчитель
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            <h3>Створити коди</h3>
+            <form method="post">
+                {% csrf_token %}
+                {% for field in codes_form %}
+                    <div class="create_codes_field">
+                        <label class="form-label"
+                               style='font-size: 20px; line-height: 30px;'
+                               for="{{ field.name }}">{{ field.label }}</label>
+                        {{ field }}
+                        {% if field.help_text %}
+                            <span>{{ field.help_text }}</span>
+                        {% endif %}
+                        {% for error in field.errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+
+                <button name="submit" id="submit"
+                        class="button btn btn-primary submit_button"
+                        style='margin: 15px;' type="submit">
+                    Створити
+                </button>
+            </form>
+        </section>
+    {% endif %}
     <section>
         <a href="/logout/" class="btn btn-outline-danger">Вийти</a>
     </section>

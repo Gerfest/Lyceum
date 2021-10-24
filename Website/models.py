@@ -7,10 +7,29 @@ class Class(models.Model):
     letter = models.CharField(max_length=2)
 
 
+class Subject(models.Model):
+    subject = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.subject
+
+
 class Student(models.Model):
     user = models.OneToOneField(to=User, on_delete=models.CASCADE,
                                 related_name='student')
     s_class = models.ForeignKey(to=Class, on_delete=models.CASCADE, null=True)
+
+    def __str__(self):
+        return self.user.username
+
+
+class Teacher(models.Model):
+    user = models.OneToOneField(to=User, on_delete=models.CASCADE,
+                                related_name='teacher')
+    subjects = models.ManyToManyField(to=Subject)
+
+    def __str__(self):
+        return self.user.username
 
 
 class Invitation(models.Model):
@@ -18,6 +37,7 @@ class Invitation(models.Model):
     invitor = models.ForeignKey(to=User, on_delete=models.CASCADE,
                                 related_name='invitor')
     activated = models.BooleanField(default=False)
-    student = models.OneToOneField(to=Student, on_delete=models.CASCADE,
-                                   null=True,
-                                   related_name='student')
+    user = models.ForeignKey(to=User, on_delete=models.CASCADE,
+                             null=True,
+                             related_name='user')
+    type = models.CharField(max_length=100, default="Student")

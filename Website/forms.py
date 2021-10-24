@@ -5,7 +5,9 @@ from django.contrib.auth.models import User
 
 class SignUpForm(UserCreationForm):
     """Registration form"""
-    invitation_code = forms.Field(
+    invitation_code = forms.CharField(
+        min_length=5,
+        max_length=99,
         label='Код запрошення',
         widget=forms.TextInput(
             attrs={
@@ -13,7 +15,9 @@ class SignUpForm(UserCreationForm):
             }
         )
     )
-    username = forms.Field(
+    username = forms.CharField(
+        min_length=5,
+        max_length=99,
         label='Ім\'я користувача',
         widget=forms.TextInput(
             attrs={
@@ -30,7 +34,8 @@ class SignUpForm(UserCreationForm):
             }
         )
     )
-    password1 = forms.Field(
+    password1 = forms.CharField(
+        min_length=8,
         label='Пароль',
         widget=forms.PasswordInput(
             attrs={
@@ -38,7 +43,8 @@ class SignUpForm(UserCreationForm):
             }
         )
     )
-    password2 = forms.Field(
+    password2 = forms.CharField(
+        min_length=8,
         label='Повторіть пароль',
         widget=forms.PasswordInput(
             attrs={
@@ -76,3 +82,14 @@ class LoginForm(forms.Form):
             }
         ),
     )
+
+
+class CreateInvitationForm(forms.Form):
+    amount = forms.IntegerField(min_value=1, max_value=99,
+                                label="Кількість", initial=1)
+    type = forms.ChoiceField(widget=forms.Select(),
+                             required=True,
+                             label="Тип",
+                             choices=(("Student", ("Учень")),
+                                      ("Teacher", ("Вчитель")))
+                             )
