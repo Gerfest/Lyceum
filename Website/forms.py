@@ -85,11 +85,12 @@ class LoginForm(forms.Form):
 
 
 class CreateInvitationForm(forms.Form):
+    """Form that allows to create a certain amount of invitations with one of two types"""
     amount = forms.IntegerField(min_value=1, max_value=99,
                                 label="Кількість", initial=1)
     type = forms.ChoiceField(widget=forms.Select(),
                              required=True,
                              label="Тип",
-                             choices=(("Student", ("Учень")),
-                                      ("Teacher", ("Вчитель")))
+                             choices=(("Student", "Учень"),
+                                      ("Teacher", "Вчитель"))
                              )
