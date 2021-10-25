@@ -1,0 +1,69 @@
+Website package
+===============
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   Website.migrations
+
+Submodules
+----------
+
+Website.admin module
+--------------------
+
+.. automodule:: Website.admin
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Website.apps module
+-------------------
+
+.. automodule:: Website.apps
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Website.forms module
+--------------------
+
+.. automodule:: Website.forms
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Website.models module
+---------------------
+
+.. automodule:: Website.models
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Website.tests module
+--------------------
+
+.. automodule:: Website.tests
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Website.views module
+--------------------
+
+.. automodule:: Website.views
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: Website
+   :members:
+   :undoc-members:
+   :show-inheritance:

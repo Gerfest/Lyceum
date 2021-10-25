@@ -1,0 +1,45 @@
+Lyceum package
+==============
+
+Submodules
+----------
+
+Lyceum.asgi module
+------------------
+
+.. automodule:: Lyceum.asgi
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Lyceum.settings module
+----------------------
+
+.. automodule:: Lyceum.settings
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Lyceum.urls module
+------------------
+
+.. automodule:: Lyceum.urls
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Lyceum.wsgi module
+------------------
+
+.. automodule:: Lyceum.wsgi
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: Lyceum
+   :members:
+   :undoc-members:
+   :show-inheritance:

@@ -1,0 +1,69 @@
+Website.migrations package
+==========================
+
+Submodules
+----------
+
+Website.migrations.0001\_initial module
+---------------------------------------
+
+.. automodule:: Website.migrations.0001_initial
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Website.migrations.0002\_alter\_invitation\_student module
+----------------------------------------------------------
+
+.. automodule:: Website.migrations.0002_alter_invitation_student
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Website.migrations.0003\_auto\_20211023\_1420 module
+----------------------------------------------------
+
+.. automodule:: Website.migrations.0003_auto_20211023_1420
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Website.migrations.0004\_auto\_20211023\_1435 module
+----------------------------------------------------
+
+.. automodule:: Website.migrations.0004_auto_20211023_1435
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Website.migrations.0005\_subject\_teacher module
+------------------------------------------------
+
+.. automodule:: Website.migrations.0005_subject_teacher
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Website.migrations.0006\_auto\_20211023\_2312 module
+----------------------------------------------------
+
+.. automodule:: Website.migrations.0006_auto_20211023_2312
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Website.migrations.0007\_invitation\_type module
+------------------------------------------------
+
+.. automodule:: Website.migrations.0007_invitation_type
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: Website.migrations
+   :members:
+   :undoc-members:
+   :show-inheritance:

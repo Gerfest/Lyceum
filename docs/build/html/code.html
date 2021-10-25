@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="ru" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Документация Разработчика &mdash; документация Lyceum Website A0.1</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/translations.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Алфавитный указатель" href="genindex.html" />
+    <link rel="search" title="Поиск" href="search.html" />
+    <link rel="prev" title="Портал Сєвєродонецького Багатопрофільного Ліцею" href="overview.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> Lyceum Website
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Поиск в документации" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Меню навигации">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Портал Сєвєродонецького Багатопрофільного Ліцею</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Документация Разработчика</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#module-Website.forms">Forms:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-Website.models">Models:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-Website.views">Views:</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Меню навигации для мобильных устройств" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Lyceum Website</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Навигация по страницам">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Документация Разработчика</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/code.rst.txt" rel="nofollow"> Просмотреть исходный код страницы</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="id1">
+<h1>Документация Разработчика<a class="headerlink" href="#id1" title="Ссылка на этот заголовок"></a></h1>
+<section id="module-Website.forms">
+<span id="forms"></span><h2>Forms:<a class="headerlink" href="#module-Website.forms" title="Ссылка на этот заголовок"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="Website.forms.CreateInvitationForm">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Website.forms.</span></span><span class="sig-name descname"><span class="pre">CreateInvitationForm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">data=None</span></em>, <em class="sig-param"><span class="pre">files=None</span></em>, <em class="sig-param"><span class="pre">auto_id='id_%s'</span></em>, <em class="sig-param"><span class="pre">prefix=None</span></em>, <em class="sig-param"><span class="pre">initial=None</span></em>, <em class="sig-param"><span class="pre">error_class=&lt;class</span> <span class="pre">'django.forms.utils.ErrorList'&gt;</span></em>, <em class="sig-param"><span class="pre">label_suffix=None</span></em>, <em class="sig-param"><span class="pre">empty_permitted=False</span></em>, <em class="sig-param"><span class="pre">field_order=None</span></em>, <em class="sig-param"><span class="pre">use_required_attribute=None</span></em>, <em class="sig-param"><span class="pre">renderer=None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Website/forms.html#CreateInvitationForm"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#Website.forms.CreateInvitationForm" title="Ссылка на это определение"></a></dt>
+<dd><p>Form that allows to create a certain amount of invitations with one of two types</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="Website.forms.CreateInvitationForm.media">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">media</span></span><a class="headerlink" href="#Website.forms.CreateInvitationForm.media" title="Ссылка на это определение"></a></dt>
+<dd><p>Return all media required to render the widgets on this form.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="Website.forms.LoginForm">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Website.forms.</span></span><span class="sig-name descname"><span class="pre">LoginForm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">data=None</span></em>, <em class="sig-param"><span class="pre">files=None</span></em>, <em class="sig-param"><span class="pre">auto_id='id_%s'</span></em>, <em class="sig-param"><span class="pre">prefix=None</span></em>, <em class="sig-param"><span class="pre">initial=None</span></em>, <em class="sig-param"><span class="pre">error_class=&lt;class</span> <span class="pre">'django.forms.utils.ErrorList'&gt;</span></em>, <em class="sig-param"><span class="pre">label_suffix=None</span></em>, <em class="sig-param"><span class="pre">empty_permitted=False</span></em>, <em class="sig-param"><span class="pre">field_order=None</span></em>, <em class="sig-param"><span class="pre">use_required_attribute=None</span></em>, <em class="sig-param"><span class="pre">renderer=None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Website/forms.html#LoginForm"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#Website.forms.LoginForm" title="Ссылка на это определение"></a></dt>
+<dd><p>Login form</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="Website.forms.LoginForm.media">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">media</span></span><a class="headerlink" href="#Website.forms.LoginForm.media" title="Ссылка на это определение"></a></dt>
+<dd><p>Return all media required to render the widgets on this form.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="Website.forms.SignUpForm">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Website.forms.</span></span><span class="sig-name descname"><span class="pre">SignUpForm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Website/forms.html#SignUpForm"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#Website.forms.SignUpForm" title="Ссылка на это определение"></a></dt>
+<dd><p>Registration form</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="Website.forms.SignUpForm.media">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">media</span></span><a class="headerlink" href="#Website.forms.SignUpForm.media" title="Ссылка на это определение"></a></dt>
+<dd><p>Return all media required to render the widgets on this form.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-Website.models">
+<span id="models"></span><h2>Models:<a class="headerlink" href="#module-Website.models" title="Ссылка на этот заголовок"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="Website.models.Class">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Website.models.</span></span><span class="sig-name descname"><span class="pre">Class</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Website/models.html#Class"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#Website.models.Class" title="Ссылка на это определение"></a></dt>
+<dd><p>Model for school classes like 9-A, 10-B, 11-A etc.</p>
+<dl class="py exception">
+<dt class="sig sig-object py" id="Website.models.Class.DoesNotExist">
+<em class="property"><span class="pre">exception</span> </em><span class="sig-name descname"><span class="pre">DoesNotExist</span></span><a class="headerlink" href="#Website.models.Class.DoesNotExist" title="Ссылка на это определение"></a></dt>
+<dd></dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="Website.models.Class.MultipleObjectsReturned">
+<em class="property"><span class="pre">exception</span> </em><span class="sig-name descname"><span class="pre">MultipleObjectsReturned</span></span><a class="headerlink" href="#Website.models.Class.MultipleObjectsReturned" title="Ссылка на это определение"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="Website.models.Invitation">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Website.models.</span></span><span class="sig-name descname"><span class="pre">Invitation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Website/models.html#Invitation"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#Website.models.Invitation" title="Ссылка на это определение"></a></dt>
+<dd><p>Model for storing invitations</p>
+<dl class="py exception">
+<dt class="sig sig-object py" id="Website.models.Invitation.DoesNotExist">
+<em class="property"><span class="pre">exception</span> </em><span class="sig-name descname"><span class="pre">DoesNotExist</span></span><a class="headerlink" href="#Website.models.Invitation.DoesNotExist" title="Ссылка на это определение"></a></dt>
+<dd></dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="Website.models.Invitation.MultipleObjectsReturned">
+<em class="property"><span class="pre">exception</span> </em><span class="sig-name descname"><span class="pre">MultipleObjectsReturned</span></span><a class="headerlink" href="#Website.models.Invitation.MultipleObjectsReturned" title="Ссылка на это определение"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="Website.models.Student">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Website.models.</span></span><span class="sig-name descname"><span class="pre">Student</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Website/models.html#Student"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#Website.models.Student" title="Ссылка на это определение"></a></dt>
+<dd><p>Model for a user who is also a student</p>
+<dl class="py exception">
+<dt class="sig sig-object py" id="Website.models.Student.DoesNotExist">
+<em class="property"><span class="pre">exception</span> </em><span class="sig-name descname"><span class="pre">DoesNotExist</span></span><a class="headerlink" href="#Website.models.Student.DoesNotExist" title="Ссылка на это определение"></a></dt>
+<dd></dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="Website.models.Student.MultipleObjectsReturned">
+<em class="property"><span class="pre">exception</span> </em><span class="sig-name descname"><span class="pre">MultipleObjectsReturned</span></span><a class="headerlink" href="#Website.models.Student.MultipleObjectsReturned" title="Ссылка на это определение"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="Website.models.Subject">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Website.models.</span></span><span class="sig-name descname"><span class="pre">Subject</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Website/models.html#Subject"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#Website.models.Subject" title="Ссылка на это определение"></a></dt>
+<dd><p>Model containing subject in school</p>
+<dl class="py exception">
+<dt class="sig sig-object py" id="Website.models.Subject.DoesNotExist">
+<em class="property"><span class="pre">exception</span> </em><span class="sig-name descname"><span class="pre">DoesNotExist</span></span><a class="headerlink" href="#Website.models.Subject.DoesNotExist" title="Ссылка на это определение"></a></dt>
+<dd></dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="Website.models.Subject.MultipleObjectsReturned">
+<em class="property"><span class="pre">exception</span> </em><span class="sig-name descname"><span class="pre">MultipleObjectsReturned</span></span><a class="headerlink" href="#Website.models.Subject.MultipleObjectsReturned" title="Ссылка на это определение"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="Website.models.Teacher">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Website.models.</span></span><span class="sig-name descname"><span class="pre">Teacher</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Website/models.html#Teacher"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#Website.models.Teacher" title="Ссылка на это определение"></a></dt>
+<dd><p>Model for a user who is also a teacher</p>
+<dl class="py exception">
+<dt class="sig sig-object py" id="Website.models.Teacher.DoesNotExist">
+<em class="property"><span class="pre">exception</span> </em><span class="sig-name descname"><span class="pre">DoesNotExist</span></span><a class="headerlink" href="#Website.models.Teacher.DoesNotExist" title="Ссылка на это определение"></a></dt>
+<dd></dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="Website.models.Teacher.MultipleObjectsReturned">
+<em class="property"><span class="pre">exception</span> </em><span class="sig-name descname"><span class="pre">MultipleObjectsReturned</span></span><a class="headerlink" href="#Website.models.Teacher.MultipleObjectsReturned" title="Ссылка на это определение"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-Website.views">
+<span id="views"></span><h2>Views:<a class="headerlink" href="#module-Website.views" title="Ссылка на этот заголовок"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="Website.views.BaseView">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Website.views.</span></span><span class="sig-name descname"><span class="pre">BaseView</span></span><a class="reference internal" href="_modules/Website/views.html#BaseView"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#Website.views.BaseView" title="Ссылка на это определение"></a></dt>
+<dd><p>Base view class; every page view class is a child of BaseView;
+has get and post functions,
+that are called when get or post methods are used;
+has a template_name in init that must be redefined in child class;</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="Website.views.BaseView.base_context">
+<span class="sig-name descname"><span class="pre">base_context</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Website/views.html#BaseView.base_context"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#Website.views.BaseView.base_context" title="Ссылка на это определение"></a></dt>
+<dd><p>Function to obtain the basic parameters of the context and render it</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Website.views.BaseView.base_render">
+<span class="sig-name descname"><span class="pre">base_render</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Website/views.html#BaseView.base_render"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#Website.views.BaseView.base_render" title="Ссылка на это определение"></a></dt>
+<dd><p>Function to render page with context.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Website.views.BaseView.get_base_menu">
+<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">get_base_menu</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="reference internal" href="_modules/Website/views.html#BaseView.get_base_menu"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#Website.views.BaseView.get_base_menu" title="Ссылка на это определение"></a></dt>
+<dd><p>Function to obtain the basic parameters of the context.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="Website.views.IndexView">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Website.views.</span></span><span class="sig-name descname"><span class="pre">IndexView</span></span><a class="reference internal" href="_modules/Website/views.html#IndexView"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#Website.views.IndexView" title="Ссылка на это определение"></a></dt>
+<dd><p>View of main website page</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="Website.views.LoginView">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Website.views.</span></span><span class="sig-name descname"><span class="pre">LoginView</span></span><a class="reference internal" href="_modules/Website/views.html#LoginView"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#Website.views.LoginView" title="Ссылка на это определение"></a></dt>
+<dd><p>View Based Class to display login page.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="Website.views.LoginView.get">
+<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Website/views.html#LoginView.get"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#Website.views.LoginView.get" title="Ссылка на это определение"></a></dt>
+<dd><p>Redefining «get» function to create login form.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Website.views.LoginView.post">
+<span class="sig-name descname"><span class="pre">post</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Website/views.html#LoginView.post"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#Website.views.LoginView.post" title="Ссылка на это определение"></a></dt>
+<dd><p>Redefining «post» function to login user.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="Website.views.LogoutView">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Website.views.</span></span><span class="sig-name descname"><span class="pre">LogoutView</span></span><a class="reference internal" href="_modules/Website/views.html#LogoutView"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#Website.views.LogoutView" title="Ссылка на это определение"></a></dt>
+<dd><p>View Based Class for logout.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="Website.views.LogoutView.get">
+<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Website/views.html#LogoutView.get"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#Website.views.LogoutView.get" title="Ссылка на это определение"></a></dt>
+<dd><p>To logout user.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="Website.views.ProfileView">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Website.views.</span></span><span class="sig-name descname"><span class="pre">ProfileView</span></span><a class="reference internal" href="_modules/Website/views.html#ProfileView"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#Website.views.ProfileView" title="Ссылка на это определение"></a></dt>
+<dd><p>View of the profile page. Supports both teacher and student account type.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="Website.views.ScheduleView">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Website.views.</span></span><span class="sig-name descname"><span class="pre">ScheduleView</span></span><a class="reference internal" href="_modules/Website/views.html#ScheduleView"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#Website.views.ScheduleView" title="Ссылка на это определение"></a></dt>
+<dd><p>A view for schedule page.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="Website.views.SignupView">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Website.views.</span></span><span class="sig-name descname"><span class="pre">SignupView</span></span><a class="reference internal" href="_modules/Website/views.html#SignupView"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#Website.views.SignupView" title="Ссылка на это определение"></a></dt>
+<dd><p>View Based Class to display registration page.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="Website.views.SignupView.get">
+<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Website/views.html#SignupView.get"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#Website.views.SignupView.get" title="Ссылка на это определение"></a></dt>
+<dd><p>Redefining «get» function to create signup form.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Website.views.SignupView.post">
+<span class="sig-name descname"><span class="pre">post</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Website/views.html#SignupView.post"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#Website.views.SignupView.post" title="Ссылка на это определение"></a></dt>
+<dd><p>Redefining «post» function to initialize user registration.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Нижняя область">
+        <a href="overview.html" class="btn btn-neutral float-left" title="Портал Сєвєродонецького Багатопрофільного Ліцею" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Предыдущая</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Nikolai Volovod.</p>
+  </div>
+
+  Собрано при помощи <a href="https://www.sphinx-doc.org/">Sphinx</a> с использованием
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">темы,</a>
+    предоставленной <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

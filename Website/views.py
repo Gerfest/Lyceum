@@ -1,15 +1,23 @@
+import secrets
+import string
+
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
 from django.views import View
-import secrets
-import string
 
 from Website.forms import SignUpForm, LoginForm, CreateInvitationForm
 from Website.models import Invitation, Student, Teacher
 
 
 class BaseView(View):
+    """
+    Base view class; every page view class is a child of BaseView;
+    has get and post functions,
+    that are called when get or post methods are used;
+    has a template_name in init that must be redefined in child class;
+    """
+
     def __init__(self):
         super().__init__()
         self.template_name = 'index.html'
@@ -60,6 +68,8 @@ class BaseView(View):
 
 
 class IndexView(BaseView):
+    """View of main website page"""
+
     def __init__(self):
         super().__init__()
         self.template_name = 'index.html'
@@ -167,6 +177,10 @@ class LogoutView(BaseView):
 
 
 class ProfileView(BaseView):
+    """
+    View of the profile page. Supports both teacher and student account type.
+    """
+
     def __init__(self):
         super().__init__()
         self.template_name = 'profile.html'
@@ -241,6 +255,8 @@ class ProfileView(BaseView):
 
 
 class ScheduleView(BaseView):
+    """A view for schedule page."""
+
     def __init__(self):
         super().__init__()
         self.template_name = 'schedule.html'

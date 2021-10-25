@@ -1,0 +1,9 @@
+Lyceum
+======
+
+.. toctree::
+   :maxdepth: 4
+
+   Lyceum
+   Website
+   manage
