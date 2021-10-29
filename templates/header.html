@@ -13,18 +13,51 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 {% for item in menu %}
-                    <li class="nav-item">
-                        <a class="nav-link {{ item.active }}"
-                           aria-current="page"
-                           href="{{ item.url }}">{{ item.label }}</a>
-                    </li>
+                    {% if not item.dropdown %}
+                        <li class="nav-item">
+                            <a class="nav-link {{ item.active }}"
+                               aria-current="page"
+                               href="{{ item.url }}">{{ item.label }}</a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle"
+                               id="navbarDropdown" role="button"
+                               data-bs-toggle="dropdown" aria-expanded="false">
+                                {{ item.label }}
+                            </a>
+                            <ul class="dropdown-menu"
+                                aria-labelledby="navbarDropdown">
+                                {% for drp_item in item.dropdown %}
+                                    <li>
+                                        <a class="dropdown-item"
+                                           href="{{ drp_item.url }}">
+                                            {{ drp_item.label }}
+                                        </a>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </li>
+                    {% endif %}
                 {% endfor %}
             </ul>
             <form class="d-flex">
                 {% if user.is_authenticated %}
-                    <a href="/profile/" class="btn btn-outline-danger">Профіль</a>
+                    <a href="/profile/" class="profile_link">
+                        <img
+                                alt="profile"
+                                src="{% static 'img/profile_pic.svg' %}"
+                                width="30" height="30"/>
+                        <span>Профіль</span>
+                    </a>
                 {% else %}
-                    <a href="/login/" class="btn btn-outline-danger">Увійти</a>
+                    <a href="/login/" class="profile_link">
+                        <img
+                                alt="profile"
+                                src="{% static 'img/profile_pic.svg' %}"
+                                width="30" height="30"/>
+                        <span>Увійти</span>
+                    </a>
                 {% endif %}
             </form>
         </div>

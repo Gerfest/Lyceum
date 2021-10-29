@@ -1,14 +1,28 @@
 {% extends "base.html" %}
 {% load static %}
 
+{% block title %}Розклад{% endblock %}
+
 {% block css %}
     <link rel="stylesheet" href="{% static 'css/schedule.css' %}">
 {% endblock %}
 
 {% block content %}
     <h1>Розклад</h1>
-    <section>
-        <table class="table">
+    <div class="week_selection">
+        <a href="?class={{ class }}&date={{ last_week_day }}"
+           class="btn btn-outline-primary">
+            <
+        </a>
+        <span>{{ date }}</span>
+        <a
+                href="?class={{ class }}&date={{ next_week_day }}"
+                class="btn btn-outline-primary">
+            >
+        </a>
+    </div>
+    <section class="main-sec">
+        <table class="table table-bordered">
             <thead>
             <tr>
                 <th scope="col">Понеділок</th>
@@ -16,17 +30,49 @@
                 <th scope="col">Середа</th>
                 <th scope="col">Четвер</th>
                 <th scope="col">П'ятниця</th>
-                <th scope="col">Суббота</th>
+                <th scope="col">Субота</th>
+                <th scope="col">Неділя</th>
             </tr>
             </thead>
             <tbody>
             <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
+                {# Понедельник #}
+                <td>
+
+                </td>
+                {# Вторник #}
+                <td>
+
+                </td>
+                {# Среда #}
+                <td>
+                    <div class="cell-wrap">
+                        {% for i in "x"|rjust:"2" %}
+                            <a href="#" class="lesson_card">
+                                <h5>Геометрія</h5>
+                                <span>Вивчення циліндра як фігури відкритої у 1500 році до н.е.</span>
+                                <span class="info">Литвиненко Людмила</span>
+                                <span class="info">8:00-8:45</span>
+                            </a>
+                        {% endfor %}
+                    </div>
+                </td>
+                {# Четверг #}
+                <td>
+
+                </td>
+                {# Пятница #}
+                <td>
+
+                </td>
+                {# Суббота #}
+                <td>
+
+                </td>
+                {# Воскресенье #}
+                <td>
+
+                </td>
             </tr>
             </tbody>
         </table>

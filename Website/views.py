@@ -2,11 +2,11 @@ import secrets
 import string
 
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
+from django.utils import dateformat
 from django.views import View
 
-from Website.forms import SignUpForm, LoginForm, CreateInvitationForm
+from Website.forms import *
 from Website.models import Invitation, Student, Teacher
 
 
@@ -22,6 +22,7 @@ class BaseView(View):
         super().__init__()
         self.template_name = 'index.html'
         self.context = dict()
+        self.messages = []
         self.login_required = False
 
     def get(self, request):
@@ -44,6 +45,7 @@ class BaseView(View):
         self.context.update({
             'menu': self.get_base_menu(request),
             'user': request.user,
+            'messages': self.messages,
         })
 
     def base_render(self, request):
@@ -58,12 +60,31 @@ class BaseView(View):
         """Function to obtain the basic parameters of the context."""
         menu = [
             {"label": "Головна", "url": "/"},
-            {"label": "Розклад", "url": "/schedule/"},
-            {"label": "Електронний щоденник", "url": "/diary/"},
         ]
+
+        if Teacher.objects.filter(user=request.user).exists():
+            dropdown = []
+            for s_class in Class.objects.all():
+                dropdown.append(
+                    {"label": s_class, "url": f"/schedule?class={s_class}"}
+                )
+            menu.append(
+                {
+                    "label": "Розклад", "dropdown": dropdown
+                }
+            )
+            menu.append({"label": "Створити урок", "url": "/create/"})
+        else:
+            menu.append({"label": "Розклад", "url": "/schedule/"})
+
         for it in range(len(menu)):
-            if menu[it]["url"] == request.path:
-                menu[it]["active"] = 'active'
+            if not "dropdown" in menu[it]:
+                if menu[it]["url"] == request.path:
+                    menu[it]["active"] = 'active'
+            else:
+                for dropdown_it in range(len(menu[it]["dropdown"])):
+                    if menu[it]["dropdown"][dropdown_it]["url"] == request.path:
+                        menu[it]["active"] = 'active'
         return menu
 
 
@@ -99,8 +120,8 @@ class LoginView(BaseView):
             return redirect('home')
         self.context.update({
             'login_form': LoginForm(request.POST),
-            'messages': ['Неверный логин или пароль'],
         })
+        self.messages.append('Неверный логин или пароль')
         return self.base_render(request)
 
     def get(self, request):
@@ -146,15 +167,15 @@ class SignupView(BaseView):
                     invitation.save()
                     return redirect('home')
                 else:
-                    message = [
-                        'Введено невірний код, або цей код вже використано']
+                    self.messages.append(
+                        'Введено невірний код, або цей код вже використано')
             else:
-                message = ['Пользователь с таким же email уже существует']
+                self.messages.append(
+                    'Пользователь с таким же email уже существует')
         else:
-            message = ['Ошибка в заполнении формы']
+            self.messages.append('Ошибка в заполнении формы')
         self.context.update({
             'registration_form': form,
-            'messages': message,
         })
         return self.base_render(request)
 
@@ -239,16 +260,15 @@ class ProfileView(BaseView):
                                               type=form.data["type"],
                                               code=code)
             else:
-                self.context.update({"codes_form": form,
-                                     'messages': [
-                                         "Форма заповнена неправильно"],
-                                     })
+                self.context.update({"codes_form": form})
+                self.messages.append("Форма заповнена неправильно")
         else:
             form = CreateInvitationForm()
             self.context.update({"codes_form": form
                                  })
 
-    def process_code_deletion(self, request):
+    @staticmethod
+    def process_code_deletion(request):
         if request.POST.get("del_code", None):
             Invitation.objects.filter(invitor=request.user,
                                       code=request.POST["del_code"]).delete()
@@ -259,8 +279,88 @@ class ScheduleView(BaseView):
 
     def __init__(self):
         super().__init__()
+        self.date = None
+        self.login_required = True
         self.template_name = 'schedule.html'
 
     def get(self, request):
         super().get(request)
+        self.get_date(request)
+        self.get_date_buttons_urls(request)
+        s_class = self.get_class(request)
+        lessons = Lesson.objects.filter(s_class=s_class)
+        weekday = self.date.weekday()
+        table = [lessons.filter()]
+        return self.base_render(request)
+
+    def get_class(self, request):
+        if Student.objects.filter(user=request.user).exists():
+            s_class = Student.objects.get(user=request.user).s_class
+        else:
+            s_class_str = request.GET.get('class', None)
+            if s_class_str is None:
+                s_class = Class.objects.all()[0]
+            else:
+                digit = s_class_str.split('-')[0]
+                letter = s_class_str.split('-')[1]
+                if Class.objects.filter(digit=digit, letter=letter).exists():
+                    s_class = Class.objects.get(digit=digit, letter=letter)
+                else:
+                    s_class = Class.objects.all()[0]
+        self.context.update({"class": s_class})
+        return s_class
+
+    def get_date_buttons_urls(self, request):
+        date = self.date
+        weekday = date.weekday()
+        date += timezone.timedelta(days=-weekday)
+        next_week_day = dateformat.format(
+            date + timezone.timedelta(days=7),
+            'Y-m-d'
+        )
+        last_week_day = dateformat.format(
+            date + timezone.timedelta(days=-7),
+            'Y-m-d'
+        )
+        date = dateformat.format(date, 'M. d') + ' - ' + dateformat.format(
+            date + timezone.timedelta(days=6), 'M. d, Y')
+        self.context.update({"date": date})
+        self.context.update({"last_week_day": last_week_day})
+        self.context.update({"next_week_day": next_week_day})
+
+    def get_date(self, request):
+        date_str = request.GET.get('date', None)
+        if date_str is None:
+            date = timezone.now()
+        else:
+            date = datetime.datetime.strptime(date_str, '%Y-%m-%d')
+        self.date = date
+
+
+class LessonCreateView(BaseView):
+    """A view for page where a teacher can create a lesson."""
+
+    def __init__(self):
+        super().__init__()
+        self.login_required = True
+        self.template_name = 'create_lesson.html'
+
+    def get(self, request):
+        super().get(request)
+        form = CreateLessonForm(request.user)
+        self.context.update({"form": form})
+        return self.base_render(request)
+
+    def post(self, request):
+        super().post(request)
+        form = CreateLessonForm(request.user, request.POST)
+        if form.is_valid():
+            lesson = form.save(commit=False)
+            lesson.teacher = Teacher.objects.get(user=request.user)
+            lesson.save()
+            self.messages.append(
+                f"Урок {lesson.subject} на {lesson.time_start.strftime('%H:%M:%S')} успішно створений")
+            self.context.update({"form": form})
+        else:
+            self.messages.append("Форма заповнена неправильно")
         return self.base_render(request)

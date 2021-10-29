@@ -1,11 +1,17 @@
+import datetime
+
 from django.contrib.auth.models import User
 from django.db import models
+from django.utils import timezone
 
 
 class Class(models.Model):
     """Model for school classes like 9-A, 10-B, 11-A etc."""
     digit = models.DecimalField(max_digits=3, decimal_places=0)
     letter = models.CharField(max_length=2)
+
+    def __str__(self):
+        return str(self.digit) + '-' + self.letter
 
 
 class Subject(models.Model):
@@ -46,3 +52,26 @@ class Invitation(models.Model):
                              null=True,
                              related_name='user')
     type = models.CharField(max_length=100, default="Student")
+
+
+class Lesson(models.Model):
+    """Lesson model that will be displayed in schedule"""
+    subject = models.ForeignKey(to=Subject, on_delete=models.CASCADE,
+                                verbose_name="Предмет")
+    date = models.DateField(verbose_name="Дата", default=timezone.now)
+    time_start = models.TimeField(verbose_name="Час початку",
+                                  default=timezone.now)
+    time_end = models.TimeField(verbose_name="Час кінця",
+                                default=timezone.now() +
+                                        timezone.timedelta(
+                                            minutes=45
+                                        )
+                                )
+    teacher = models.ForeignKey(to=Teacher, on_delete=models.CASCADE,
+                                verbose_name="Вчитель")
+    s_class = models.ForeignKey(to=Class, on_delete=models.CASCADE,
+                                verbose_name="Клас")
+    link = models.CharField(max_length=1000, blank=True,
+                            verbose_name="Посилання")
+    description = models.TextField(max_length=5000, blank=True,
+                                   verbose_name="Опис")
