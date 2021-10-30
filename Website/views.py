@@ -297,11 +297,11 @@ class ProfileView(LoginRequiredMixin, BaseView):
 
     def post(self, request):
         super().post(request)
+        self.save_profile_change_form(request)
         self.process_code_creation(request)
         self.process_code_deletion(request)
         self.get_user_info(request)
         self.get_invitation_codes(request)
-        self.save_profile_change_form(request)
         return self.base_render(request)
 
     def process_code_creation(self, request):
@@ -470,8 +470,3 @@ class LessonCreateView(LoginRequiredMixin, BaseView):
         else:
             self.messages.append("Форма заповнена неправильно")
         return self.base_render(request)
-
-
-class ContinueRegistration(LoginRequiredMixin, BaseView):
-    """A view for page where user adds data as teacher or student"""
-    login_url = '/login/'
