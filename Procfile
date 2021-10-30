@@ -1,0 +1,1 @@
+web: gunicorn Lyceum.wsgi --log-file -
