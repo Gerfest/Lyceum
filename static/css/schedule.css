@@ -64,11 +64,10 @@ table {
     flex: 1 1 auto;
 }
 
-.lesson_card {
+.task_card {
     width: 100%;
     margin: 5px 0;
     padding: 10px;
-    background-color: #1967d2;
     border-radius: 5px;
     color: #fff !important;
     display: flex;
@@ -77,12 +76,24 @@ table {
     transition: 0.1s;
 }
 
-.lesson_card:hover {
-    background-color: #1e63c2;
+.task_card > h5 {
+    font-weight: 500;
 }
 
-.lesson_card > h5 {
-    font-weight: 500;
+.lesson_card {
+    background-color: #1967d2;
+}
+
+.lesson_card:hover {
+    background-color: #1454a8;
+}
+
+.test_card {
+    background-color: #007b83;
+}
+
+.test_card:hover {
+    background-color: #006269;
 }
 
 .info {

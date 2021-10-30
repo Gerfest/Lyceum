@@ -27,5 +27,7 @@ urlpatterns = [
     path('profile/', ProfileView.as_view(), name='profile'),
     path('schedule/', ScheduleView.as_view(), name='schedule'),
     path('create/', LessonCreateView.as_view(), name='create_lesson'),
+    path('signup/continue/', LessonCreateView.as_view(),
+         name='continue_registration'),
 
 ]

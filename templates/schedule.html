@@ -8,7 +8,7 @@
 {% endblock %}
 
 {% block content %}
-    <h1>Розклад</h1>
+    <h1>Розклад {{ class }}</h1>
     <div class="week_selection">
         <a href="?class={{ class }}&date={{ last_week_day }}"
            class="btn btn-outline-primary">
@@ -22,7 +22,7 @@
         </a>
     </div>
     <section class="main-sec">
-        <table class="table table-bordered">
+        <table class="table table-bordered table-primary">
             <thead>
             <tr>
                 <th scope="col">Понеділок</th>
@@ -36,43 +36,34 @@
             </thead>
             <tbody>
             <tr>
-                {# Понедельник #}
-                <td>
-
-                </td>
-                {# Вторник #}
-                <td>
-
-                </td>
-                {# Среда #}
-                <td>
-                    <div class="cell-wrap">
-                        {% for i in "x"|rjust:"2" %}
-                            <a href="#" class="lesson_card">
-                                <h5>Геометрія</h5>
-                                <span>Вивчення циліндра як фігури відкритої у 1500 році до н.е.</span>
-                                <span class="info">Литвиненко Людмила</span>
-                                <span class="info">8:00-8:45</span>
-                            </a>
-                        {% endfor %}
-                    </div>
-                </td>
-                {# Четверг #}
-                <td>
-
-                </td>
-                {# Пятница #}
-                <td>
-
-                </td>
-                {# Суббота #}
-                <td>
-
-                </td>
-                {# Воскресенье #}
-                <td>
-
-                </td>
+                {% for day in table %}
+                    {# Понедельник #}
+                    <td>
+                        <div class="cell-wrap">
+                            {% for lesson in day %}
+                                <a target="_blank"
+                                        {% if lesson.link %}
+                                   href="//{{ lesson.link }}"
+                                        {% endif %}
+                                   class="task_card {{ lesson.type }}_card">
+                                    <h5>{{ lesson.subject }}</h5>
+                                    <span>{{ lesson.description }}</span>
+                                    <span class="info">
+                                        {% if lesson.type == "lesson" %}
+                                            Урок
+                                        {% elif lesson.type == "test" %}
+                                            Тест
+                                        {% else %}
+                                            {{ lesson.type }}
+                                        {% endif %}
+                                    </span>
+                                    <span class="info">{{ lesson.teacher.user.last_name }} {{ lesson.teacher.user.first_name }}</span>
+                                    <span class="info">{{ lesson.time_start }}-{{ lesson.time_end }}</span>
+                                </a>
+                            {% endfor %}
+                        </div>
+                    </td>
+                {% endfor %}
             </tr>
             </tbody>
         </table>

@@ -30,7 +30,7 @@
                                 aria-labelledby="navbarDropdown">
                                 {% for drp_item in item.dropdown %}
                                     <li>
-                                        <a class="dropdown-item"
+                                        <a class="dropdown-item {{ drp_item.active }}"
                                            href="{{ drp_item.url }}">
                                             {{ drp_item.label }}
                                         </a>

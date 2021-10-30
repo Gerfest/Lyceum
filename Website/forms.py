@@ -27,6 +27,26 @@ class SignUpForm(UserCreationForm):
             }
         )
     )
+    first_name = forms.CharField(
+        min_length=1,
+        max_length=99,
+        label='Ім\'я',
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control'
+            }
+        )
+    )
+    last_name = forms.CharField(
+        min_length=1,
+        max_length=99,
+        label='Прізвище',
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control'
+            }
+        )
+    )
     email = forms.EmailField(
         label='Email',
         max_length=254,
@@ -57,7 +77,7 @@ class SignUpForm(UserCreationForm):
 
     class Meta:
         model = User
-        fields = ('username', 'email', 'password1', 'password2',)
+        fields = ('username', 'first_name', 'last_name', 'email', 'password1', 'password2',)
 
 
 class LoginForm(forms.Form):
@@ -115,3 +135,66 @@ class CreateLessonForm(ModelForm):
             'time_start': forms.DateInput(attrs={'type': 'time'}),
             'time_end': forms.DateInput(attrs={'type': 'time'}),
         }
+
+
+class ChangeProfileForm(forms.Form):
+    """A form that allows to change user info"""
+    username = forms.CharField(
+        min_length=5,
+        max_length=99,
+        label='Ім\'я користувача',
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control'
+            }
+        )
+    )
+    email = forms.EmailField(
+        label='Email',
+        max_length=254,
+        widget=forms.EmailInput(
+            attrs={
+                'class': 'form-control',
+            }
+        )
+    )
+    first_name = forms.CharField(
+        min_length=1,
+        max_length=99,
+        label='Ім\'я',
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control'
+            }
+        )
+    )
+    last_name = forms.CharField(
+        min_length=1,
+        max_length=99,
+        label='Прізвище',
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control'
+            }
+        )
+    )
+    subjects = forms.ModelMultipleChoiceField(
+        queryset=Subject.objects.all(),
+        label='Предмети',
+        required=False,
+        widget=forms.CheckboxSelectMultiple(
+            attrs={
+
+            }
+        )
+    )
+    s_class = forms.ModelChoiceField(
+        queryset=Class.objects.all(),
+        label='Клас',
+        required=False,
+        widget=forms.Select(
+            attrs={
+                'class': 'form-select'
+            }
+        )
+    )

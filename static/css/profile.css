@@ -1,11 +1,74 @@
 table {
     text-align: center;
 }
+
 .codes {
     width: 50%;
 }
+
 section {
     margin: 20px;
     padding: 20px;
     background-color: rgba(0, 0, 0, 0.05);
+}
+
+.table-wrapper {
+    max-height: 400px;
+    overflow: auto;
+}
+
+th, td {
+    vertical-align: middle;
+}
+
+td > form {
+    margin: auto;
+}
+
+.delete-code_btn {
+    border-radius: 50%;
+    vertical-align: middle;
+    text-align: center;
+    padding: 0.5rem;
+    background: none;
+}
+
+.delete-code_btn > img {
+    height: 24px;
+    width: 24px;
+}
+
+form {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    justify-content: center;
+    width: -moz-fit-content;
+    width: fit-content;
+}
+
+.create_codes_field {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    flex-direction: row;
+    width: 200px;
+}
+
+.profile-change_buttons {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+
+}
+
+.profile-change_buttons > button {
+    margin: 0 15px;
+}
+.change-field {
+    margin-bottom: 10px;
+}
+
+#id_subjects {
+    margin-bottom: 0;
 }

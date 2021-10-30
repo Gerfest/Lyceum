@@ -13,7 +13,7 @@
         <div class="section1">
             <div class="sec1-main">
                 <h1>Портал<br>Багатопрофільного Ліцею</h1>
-                <a href="http://litsey.sd.ua/"
+                <a target="_blank" href="http://litsey.sd.ua/"
                    class="lyceum-site-btn btn btn-danger" type="button">Читати
                     більше</a>
             </div>
@@ -33,7 +33,6 @@
                         <h5 class="card-title">{{ teacher.user.first_name }} {{ teacher.user.last_name }}</h5>
                         <p class="card-text">
                             Предмети: {{ teacher.subjects.all|join:", " }}</p>
-                        <a href="#" class="btn btn-primary">Go somewhere</a>
                     </div>
                 </div>
             {% endfor %}

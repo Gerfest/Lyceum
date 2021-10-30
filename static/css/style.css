@@ -7,6 +7,11 @@
     box-shadow: 0 6px 16px 0 rgba(34, 60, 80, 0.46);
 }
 
+.navbar-toggler {
+    width: fit-content;
+    width: -moz-fit-content;
+}
+
 a {
     text-decoration: none;
 }
@@ -35,4 +40,8 @@ main {
 
 footer {
     flex: 0 1 auto;
+}
+
+.hidden {
+    display: none;
 }

@@ -1,7 +1,11 @@
+import datetime
 import secrets
 import string
+from operator import attrgetter
 
+import pytz
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect
 from django.utils import dateformat
 from django.views import View
@@ -17,26 +21,20 @@ class BaseView(View):
     that are called when get or post methods are used;
     has a template_name in init that must be redefined in child class;
     """
+    login_url = '/login/'
+    redirect_field_name = 'redirect_to'
 
     def __init__(self):
         super().__init__()
         self.template_name = 'index.html'
         self.context = dict()
         self.messages = []
-        self.login_required = False
 
     def get(self, request):
-        self.both(request)
         return self.base_context(request)
 
     def post(self, request):
-        self.both(request)
         return self.base_context(request)
-
-    def both(self, request):
-        if self.login_required:
-            if not request.user.is_authenticated:
-                return redirect('login')
 
     def base_context(self, request):
         """
@@ -52,28 +50,31 @@ class BaseView(View):
         """Function to render page with context."""
         return render(request, self.template_name, self.context)
 
-    def check_login(self):
-        self.login_required = True
-
     @staticmethod
     def get_base_menu(request) -> list:
         """Function to obtain the basic parameters of the context."""
         menu = [
             {"label": "Головна", "url": "/"},
         ]
-
-        if Teacher.objects.filter(user=request.user).exists():
-            dropdown = []
-            for s_class in Class.objects.all():
-                dropdown.append(
-                    {"label": s_class, "url": f"/schedule?class={s_class}"}
+        if request.user.is_authenticated:
+            s_class = Student.objects.get(
+                user=request.user).s_class if Student.objects.filter(
+                user=request.user).exists() else None
+            if s_class is None:
+                dropdown = []
+                for s_class in Class.objects.all():
+                    dropdown.append(
+                        {"label": s_class, "url": f"/schedule/?class={s_class}"}
+                    )
+                menu.append(
+                    {
+                        "label": "Розклад", "dropdown": dropdown
+                    }
                 )
-            menu.append(
-                {
-                    "label": "Розклад", "dropdown": dropdown
-                }
-            )
-            menu.append({"label": "Створити урок", "url": "/create/"})
+            else:
+                menu.append({"label": "Розклад", "url": "/schedule/"})
+            if Teacher.objects.filter(user=request.user).exists():
+                menu.append({"label": "Створити урок", "url": "/create/"})
         else:
             menu.append({"label": "Розклад", "url": "/schedule/"})
 
@@ -83,8 +84,10 @@ class BaseView(View):
                     menu[it]["active"] = 'active'
             else:
                 for dropdown_it in range(len(menu[it]["dropdown"])):
-                    if menu[it]["dropdown"][dropdown_it]["url"] == request.path:
-                        menu[it]["active"] = 'active'
+                    if menu[it]["dropdown"][dropdown_it][
+                        "url"] == str(request.path) + '?class=' + str(
+                        get_class(request)):
+                        menu[it]["dropdown"][dropdown_it]["active"] = 'active'
         return menu
 
 
@@ -121,7 +124,7 @@ class LoginView(BaseView):
         self.context.update({
             'login_form': LoginForm(request.POST),
         })
-        self.messages.append('Неверный логин или пароль')
+        self.messages.append('Неправильний логін чи пароль')
         return self.base_render(request)
 
     def get(self, request):
@@ -171,9 +174,9 @@ class SignupView(BaseView):
                         'Введено невірний код, або цей код вже використано')
             else:
                 self.messages.append(
-                    'Пользователь с таким же email уже существует')
+                    'Користувач з таким самим email вже існує')
         else:
-            self.messages.append('Ошибка в заполнении формы')
+            self.messages.append('Помилка в заповненні форми')
         self.context.update({
             'registration_form': form,
         })
@@ -192,15 +195,16 @@ class LogoutView(BaseView):
     """View Based Class for logout."""
 
     def get(self, request):
-        """To logout user."""
+        """To logout a user."""
         logout(request)
         return redirect('home')
 
 
-class ProfileView(BaseView):
+class ProfileView(LoginRequiredMixin, BaseView):
     """
     View of the profile page. Supports both teacher and student account type.
     """
+    login_url = '/login/'
 
     def __init__(self):
         super().__init__()
@@ -208,19 +212,71 @@ class ProfileView(BaseView):
 
     def get(self, request):
         super().get(request)
-        self.check_login()
+        self.set_profile_change_form(request)
         self.get_user_info(request)
         self.get_invitation_codes(request)
         self.context.update({"codes_form": CreateInvitationForm()})
         return self.base_render(request)
+
+    def set_profile_change_form(self, request):
+        form = ChangeProfileForm()
+        form.fields['username'].initial = request.user.username
+        form.fields['email'].initial = request.user.email
+        form.fields['first_name'].initial = request.user.first_name
+        form.fields['last_name'].initial = request.user.last_name
+        if Teacher.objects.filter(user=request.user).exists():
+            form.fields['subjects'].initial = Teacher.objects.get(
+                user=request.user).subjects.all()
+        else:
+            del form.fields['subjects']
+        if Student.objects.filter(user=request.user).exists():
+            s_class = Student.objects.get(user=request.user).s_class
+            form.fields['s_class'].initial = s_class
+        else:
+            del form.fields['s_class']
+        self.context.update({"profile_change_form": form})
+
+    def save_profile_change_form(self, request):
+        form = ChangeProfileForm(request.POST)
+        if "change_profile" in request.POST:
+            if form.is_valid():
+                if form.cleaned_data["username"] != request.user.username:
+                    request.user.username = form.cleaned_data["username"]
+                if form.cleaned_data["first_name"] != request.user.first_name:
+                    request.user.first_name = form.cleaned_data["first_name"]
+                if form.cleaned_data["last_name"] != request.user.last_name:
+                    request.user.last_name = form.cleaned_data["last_name"]
+                if form.cleaned_data["email"] != request.user.email:
+                    request.user.email = form.cleaned_data["email"]
+                if Teacher.objects.filter(user=request.user).exists():
+                    teacher = Teacher.objects.get(user=request.user)
+                    if form.cleaned_data["subjects"] != teacher.subjects.all():
+                        teacher.subjects.set(form.cleaned_data["subjects"])
+                if Student.objects.filter(user=request.user).exists():
+                    student = Student.objects.get(user=request.user)
+                    if form.cleaned_data["s_class"] != student.s_class and \
+                            form.cleaned_data["s_class"]:
+                        student.s_class = form.cleaned_data["s_class"]
+                    student.save()
+                request.user.save()
+            else:
+                self.messages.append("Форма заповнена неправильно")
+        if not Teacher.objects.filter(user=request.user).exists():
+            del form.fields['subjects']
+        if not Student.objects.filter(user=request.user).exists():
+            del form.fields['s_class']
+        self.context.update({"profile_change_form": form})
 
     def get_user_info(self, request):
         self.context.update({"user": request.user})
         user_type = []
         if Student.objects.filter(user=request.user).exists():
             user_type.append("student")
+            student = Student.objects.get(user=request.user)
+            if student.s_class is None:
+                self.context.update({"noclass": True})
             self.context.update(
-                {"student": Student.objects.get(user=request.user)})
+                {"student": student})
         if Teacher.objects.filter(user=request.user).exists():
             user_type.append("teacher")
             self.context.update(
@@ -241,16 +297,16 @@ class ProfileView(BaseView):
 
     def post(self, request):
         super().post(request)
-        self.check_login()
         self.process_code_creation(request)
         self.process_code_deletion(request)
         self.get_user_info(request)
         self.get_invitation_codes(request)
+        self.save_profile_change_form(request)
         return self.base_render(request)
 
     def process_code_creation(self, request):
         form = CreateInvitationForm(request.POST)
-        if request.POST.get("del_code", None) is None:
+        if 'create_codes' in request.POST:
             if form.is_valid():
                 self.context.update({"codes_form": CreateInvitationForm()})
                 alphabet = string.ascii_letters + string.digits
@@ -264,56 +320,70 @@ class ProfileView(BaseView):
                 self.messages.append("Форма заповнена неправильно")
         else:
             form = CreateInvitationForm()
-            self.context.update({"codes_form": form
-                                 })
+            self.context.update({"codes_form": form})
 
     @staticmethod
     def process_code_deletion(request):
-        if request.POST.get("del_code", None):
+        if "delete_code" in request.POST:
             Invitation.objects.filter(invitor=request.user,
                                       code=request.POST["del_code"]).delete()
 
 
-class ScheduleView(BaseView):
+def get_class(request):
+    s_class = None
+    if Student.objects.filter(user=request.user).exists():
+        s_class = Student.objects.get(user=request.user).s_class
+    if s_class is None:
+        s_class_str = request.GET.get('class', None)
+        if s_class_str is None:
+            s_class = Class.objects.all()[0]
+        else:
+            digit = s_class_str.split('-')[0]
+            letter = s_class_str.split('-')[1]
+            if Class.objects.filter(digit=digit, letter=letter).exists():
+                s_class = Class.objects.get(digit=digit, letter=letter)
+            else:
+                s_class = Class.objects.all()[0]
+    return s_class
+
+
+class ScheduleView(LoginRequiredMixin, BaseView):
     """A view for schedule page."""
+    login_url = '/login/'
 
     def __init__(self):
         super().__init__()
+        self.lessons = []
+        self.week = None
+        self.weekday = tuple
         self.date = None
-        self.login_required = True
         self.template_name = 'schedule.html'
 
     def get(self, request):
         super().get(request)
         self.get_date(request)
         self.get_date_buttons_urls(request)
-        s_class = self.get_class(request)
-        lessons = Lesson.objects.filter(s_class=s_class)
-        weekday = self.date.weekday()
-        table = [lessons.filter()]
+        s_class = get_class(request)
+        self.context.update({"class": s_class})
+        self.lessons = Lesson.objects.filter(s_class=s_class)
+        self.sort_lessons(request)
+        self.create_table(request)
+        self.ask_for_class(request)
         return self.base_render(request)
 
-    def get_class(self, request):
+    def ask_for_class(self, request):
         if Student.objects.filter(user=request.user).exists():
             s_class = Student.objects.get(user=request.user).s_class
-        else:
-            s_class_str = request.GET.get('class', None)
-            if s_class_str is None:
-                s_class = Class.objects.all()[0]
-            else:
-                digit = s_class_str.split('-')[0]
-                letter = s_class_str.split('-')[1]
-                if Class.objects.filter(digit=digit, letter=letter).exists():
-                    s_class = Class.objects.get(digit=digit, letter=letter)
-                else:
-                    s_class = Class.objects.all()[0]
-        self.context.update({"class": s_class})
-        return s_class
+            if s_class is None:
+                self.messages.append(
+                    "Увага! Клас не обран! "
+                    "Перейдіть до профіля і оберіть клас."
+                )
 
     def get_date_buttons_urls(self, request):
         date = self.date
-        weekday = date.weekday()
-        date += timezone.timedelta(days=-weekday)
+        self.weekday = date.weekday()
+        date += timezone.timedelta(days=-self.weekday)
         next_week_day = dateformat.format(
             date + timezone.timedelta(days=7),
             'Y-m-d'
@@ -322,6 +392,14 @@ class ScheduleView(BaseView):
             date + timezone.timedelta(days=-7),
             'Y-m-d'
         )
+        date_from = datetime.datetime.combine(date,
+                                              datetime.time(0, 0)).replace(
+            tzinfo=pytz.timezone("Europe/Kiev"))
+        date_to = datetime.datetime.combine(
+            date_from + timezone.timedelta(days=6),
+            datetime.time(23, 59)).replace(
+            tzinfo=pytz.timezone("Europe/Kiev"))
+        self.week = (date_from, date_to)
         date = dateformat.format(date, 'M. d') + ' - ' + dateformat.format(
             date + timezone.timedelta(days=6), 'M. d, Y')
         self.context.update({"date": date})
@@ -336,13 +414,37 @@ class ScheduleView(BaseView):
             date = datetime.datetime.strptime(date_str, '%Y-%m-%d')
         self.date = date
 
+    def sort_lessons(self, request):
+        lessons = []
+        for lesson in self.lessons:
+            if self.week[0] <= datetime.datetime.combine(
+                    lesson.date, datetime.time(0, 0)
+            ).replace(tzinfo=pytz.timezone("Europe/Kiev")) <= self.week[1]:
+                lessons.append(lesson)
+        lessons.sort(key=attrgetter("time_start"))
+        self.lessons = lessons
 
-class LessonCreateView(BaseView):
+    def create_table(self, request):
+        table = []
+        for day in range(7):
+            date_from = self.week[0] + timezone.timedelta(days=day)
+            date_to = self.week[0] + timezone.timedelta(days=day + 1)
+            day_lessons = []
+            for lesson in self.lessons:
+                if date_from <= datetime.datetime.combine(lesson.date,
+                                                          lesson.time_start).replace(
+                    tzinfo=pytz.timezone("Europe/Kiev")) < date_to:
+                    day_lessons.append(lesson)
+            table.append(day_lessons)
+        self.context.update({"table": table})
+
+
+class LessonCreateView(LoginRequiredMixin, BaseView):
     """A view for page where a teacher can create a lesson."""
+    login_url = '/login/'
 
     def __init__(self):
         super().__init__()
-        self.login_required = True
         self.template_name = 'create_lesson.html'
 
     def get(self, request):
@@ -356,6 +458,10 @@ class LessonCreateView(BaseView):
         form = CreateLessonForm(request.user, request.POST)
         if form.is_valid():
             lesson = form.save(commit=False)
+            if "http://" in lesson.link:
+                lesson.link = lesson.link[7:]
+            elif "https://" in lesson.link:
+                lesson.link = lesson.link[8:]
             lesson.teacher = Teacher.objects.get(user=request.user)
             lesson.save()
             self.messages.append(
@@ -364,3 +470,8 @@ class LessonCreateView(BaseView):
         else:
             self.messages.append("Форма заповнена неправильно")
         return self.base_render(request)
+
+
+class ContinueRegistration(LoginRequiredMixin, BaseView):
+    """A view for page where user adds data as teacher or student"""
+    login_url = '/login/'

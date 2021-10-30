@@ -1,5 +1,3 @@
-import datetime
-
 from django.contrib.auth.models import User
 from django.db import models
 from django.utils import timezone
@@ -73,5 +71,13 @@ class Lesson(models.Model):
                                 verbose_name="Клас")
     link = models.CharField(max_length=1000, blank=True,
                             verbose_name="Посилання")
+    type = models.CharField(verbose_name="Тип",
+                            max_length=100,
+                            choices=[("lesson", "Урок"), ("test", "Тест")],
+                            default="lesson"
+                            )
     description = models.TextField(max_length=5000, blank=True,
                                    verbose_name="Опис")
+
+    def __str__(self):
+        return f"{self.subject}, {self.s_class}, {self.date} {self.time_start}-{self.time_end}"

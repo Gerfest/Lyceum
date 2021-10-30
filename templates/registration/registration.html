@@ -6,11 +6,14 @@
 {% endblock %}
 
 {% block content %}
-    <form method="post">
+    <section class="main-sec">
+        <form method="post">
             {% csrf_token %}
             {% for field in registration_form %}
                 <div class="reg-field form-group">
-                    <label class="form-label" style='font-size: 20px; line-height: 30px;' for="{{ field.name }}">{{ field.label }}</label>
+                    <label class="form-label"
+                           style='font-size: 20px; line-height: 30px;'
+                           for="{{ field.name }}">{{ field.label }}</label>
                     {{ field }}
                     {% if field.help_text %}
                         <small class="form-text text-muted">
@@ -24,13 +27,17 @@
                     </small>
                 </div>
             {% endfor %}
-            <p class="form-text text-muted" style="margin: 20px;">
-                By clicking "Register", you confirm that you have read and
-                fully understand our terms of service and confidentiality policies.
+            <hr>
+            <p class="form-text text-muted">
+                Натискаючи «Зареєструватися», ви підтверджуєте, що прочитали та
+                повністю розумієте наші умови надання послуг та <a
+                    target=”_blank”
+                    href="{% static 'docs/conf-policy.pdf' %}">політику
+                конфіденційності.</a>
             </p>
             <button class="button btn btn-primary submit_button" type="submit">
-                Register
+                Зареєструватися
             </button>
         </form>
-
+    </section>
 {% endblock %}
