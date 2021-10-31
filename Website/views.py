@@ -281,6 +281,8 @@ class ProfileView(LoginRequiredMixin, BaseView):
             user_type.append("teacher")
             self.context.update(
                 {"teacher": Teacher.objects.get(user=request.user)})
+        if request.user.is_superuser:
+            user_type.append("admin")
         self.context.update({"user_type": user_type})
 
     def get_invitation_codes(self, request):
