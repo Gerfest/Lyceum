@@ -31,6 +31,7 @@
                     {{ teacher.subjects.all|join:", " }}
                 {% endif %}
             </p>
+            <p>Телефон: {{ teacher.phone }}</p>
         {% endif %}
         <button type="button" class="btn change_toggle btn-outline-primary">
             Редагувати
@@ -40,7 +41,7 @@
         <form method="post">
             {% csrf_token %}
             {% for field in profile_change_form %}
-                <div class="change-field form-group">
+                <div class="change-field form-group {% if field.name == 'show_phone' %}form-switch{% endif %}">
                     <label class="form-label"
                            style='font-size: 20px; line-height: 30px;'
                            for="{{ field.name }}">{{ field.label }}</label>
@@ -136,20 +137,20 @@
                 <form method="post" class="create-codes_form">
                     {% csrf_token %}
                     <div class="create-codes_form-fields">
-                    {% for field in codes_form %}
-                        <div class="create_codes_field">
-                            <label class="form-label"
-                                   style='font-size: 20px; line-height: 30px;'
-                                   for="{{ field.name }}">{{ field.label }}</label>
-                            {{ field }}
-                            {% if field.help_text %}
-                                <span>{{ field.help_text }}</span>
-                            {% endif %}
-                            {% for error in field.errors %}
-                                <p>{{ error }}</p>
-                            {% endfor %}
-                        </div>
-                    {% endfor %}
+                        {% for field in codes_form %}
+                            <div class="create_codes_field">
+                                <label class="form-label"
+                                       style='font-size: 20px; line-height: 30px;'
+                                       for="{{ field.name }}">{{ field.label }}</label>
+                                {{ field }}
+                                {% if field.help_text %}
+                                    <span>{{ field.help_text }}</span>
+                                {% endif %}
+                                {% for error in field.errors %}
+                                    <p>{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                        {% endfor %}
                     </div>
                     <button name="create_codes" id="create_codes"
                             class="button btn btn-primary submit_button"

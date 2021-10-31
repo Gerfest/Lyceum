@@ -30,9 +30,18 @@
                     <img src="{% static 'img/teacher.png' %}"
                          class="card-img-top" alt="">
                     <div class="card-body">
-                        <h5 class="card-title">{{ teacher.user.first_name }} {{ teacher.user.last_name }}</h5>
+                        <h5 class="card-title">
+                            {{ teacher.user.first_name }} {{ teacher.user.last_name }}
+                        </h5>
                         <p class="card-text">
-                            Предмети: {{ teacher.subjects.all|join:", " }}</p>
+                            Предмети: {{ teacher.subjects.all|join:", " }}
+                        </p>
+                        {% if teacher.phone and teacher.show_phone %}
+                            <p class="card-text">
+                                Телефон: <a
+                                    href="tel:{{ teacher.phone }}">{{ teacher.phone }}</a>
+                            </p>
+                        {% endif %}
                     </div>
                 </div>
             {% endfor %}

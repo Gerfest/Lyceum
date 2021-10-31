@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
 from django.db import models
 from django.utils import timezone
+from phonenumber_field.modelfields import PhoneNumberField
 
 
 class Class(models.Model):
@@ -35,6 +36,10 @@ class Teacher(models.Model):
     user = models.OneToOneField(to=User, on_delete=models.CASCADE,
                                 related_name='teacher')
     subjects = models.ManyToManyField(to=Subject)
+
+    phone = PhoneNumberField(blank=True)
+
+    show_phone = models.BooleanField(default=True)
 
     def __str__(self):
         return self.user.username

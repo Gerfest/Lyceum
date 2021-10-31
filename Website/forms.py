@@ -1,8 +1,8 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.forms import ModelForm
-
 from Website.models import *
+from phonenumber_field.formfields import PhoneNumberField
 
 
 class SignUpForm(UserCreationForm):
@@ -193,6 +193,24 @@ class ChangeProfileForm(forms.Form):
         widget=forms.CheckboxSelectMultiple(
             attrs={
 
+            }
+        )
+    )
+    phone = PhoneNumberField(
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control'
+            }
+        ),
+        label='Телефон',
+        required=False,
+    )
+    show_phone = forms.BooleanField(
+        label="Показувати телефон іншим?",
+        widget=forms.CheckboxInput(
+            attrs={
+                'class': 'form-check-input',
+                'role': "switch"
             }
         )
     )

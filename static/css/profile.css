@@ -96,6 +96,7 @@ h1, h2, h3, h4, h5, h5 {
 .table_sec {
     width: 50%;
 }
+
 .create_sec {
     width: fit-content;
 }
@@ -122,6 +123,27 @@ h1, h2, h3, h4, h5, h5 {
     flex-direction: column;
     flex-wrap: wrap;
     justify-content: center;
+}
+
+.form-switch, .form-check-input {
+    margin-left: 0 !important;
+}
+
+.form-check-input {
+    margin: 0 5px !important;
+    margin-top: 0.25rem!important;
+}
+
+.form-switch {
+    display: flex;
+    padding: 0;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row-reverse;
+}
+
+.form-switch > .form-label {
+    margin-bottom: 0;
 }
 
 @media (max-width: 1200px) {

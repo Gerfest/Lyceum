@@ -241,8 +241,14 @@ class ProfileView(LoginRequiredMixin, BaseView):
         if Teacher.objects.filter(user=request.user).exists():
             form.fields['subjects'].initial = Teacher.objects.get(
                 user=request.user).subjects.all()
+            form.fields['phone'].initial = Teacher.objects.get(
+                user=request.user).phone
+            form.fields['show_phone'].initial = Teacher.objects.get(
+                user=request.user).show_phone
         else:
             del form.fields['subjects']
+            del form.fields['phone']
+            del form.fields['show_phone']
         if Student.objects.filter(user=request.user).exists():
             s_class = Student.objects.get(user=request.user).s_class
             form.fields['s_class'].initial = s_class
@@ -271,6 +277,11 @@ class ProfileView(LoginRequiredMixin, BaseView):
                     teacher = Teacher.objects.get(user=request.user)
                     if form.cleaned_data["subjects"] != teacher.subjects.all():
                         teacher.subjects.set(form.cleaned_data["subjects"])
+                    if form.cleaned_data["phone"] != teacher.phone:
+                        teacher.phone = form.cleaned_data["phone"]
+                    if form.cleaned_data["show_phone"] != teacher.show_phone:
+                        teacher.show_phone = form.cleaned_data["show_phone"]
+                    teacher.save()
                 if Student.objects.filter(user=request.user).exists():
                     student = Student.objects.get(user=request.user)
                     if form.cleaned_data["s_class"] != student.s_class and \
