@@ -13,7 +13,8 @@ class SignUpForm(UserCreationForm):
         label='Код запрошення',
         widget=forms.TextInput(
             attrs={
-                'class': 'form-control'
+                'class': 'form-control',
+                'placeholder': 'Одноразовий код запрошення видається вчителем',
             }
         )
     )
@@ -23,7 +24,8 @@ class SignUpForm(UserCreationForm):
         label='Ім\'я користувача',
         widget=forms.TextInput(
             attrs={
-                'class': 'form-control'
+                'class': 'form-control',
+                'placeholder': 'Зазвичай від 5 символів англійською мовою',
             }
         )
     )
@@ -33,7 +35,8 @@ class SignUpForm(UserCreationForm):
         label='Ім\'я',
         widget=forms.TextInput(
             attrs={
-                'class': 'form-control'
+                'class': 'form-control',
+                'placeholder': 'Ваше ім\'я',
             }
         )
     )
@@ -43,7 +46,8 @@ class SignUpForm(UserCreationForm):
         label='Прізвище',
         widget=forms.TextInput(
             attrs={
-                'class': 'form-control'
+                'class': 'form-control',
+                'placeholder': 'Ваше прізвище',
             }
         )
     )
@@ -53,6 +57,7 @@ class SignUpForm(UserCreationForm):
         widget=forms.EmailInput(
             attrs={
                 'class': 'form-control',
+                'placeholder': 'Ваша електронна пошта',
             }
         )
     )
@@ -61,7 +66,8 @@ class SignUpForm(UserCreationForm):
         label='Пароль',
         widget=forms.PasswordInput(
             attrs={
-                'class': 'form-control'
+                'class': 'form-control',
+                'placeholder': 'Пароль для сайту',
             }
         )
     )
@@ -70,7 +76,8 @@ class SignUpForm(UserCreationForm):
         label='Повторіть пароль',
         widget=forms.PasswordInput(
             attrs={
-                'class': 'form-control'
+                'class': 'form-control',
+                'placeholder': 'Повторіть пароль вище',
             }
         )
     )
@@ -85,12 +92,12 @@ class LoginForm(forms.Form):
     """Login form"""
     username = forms.CharField(
         max_length=150,
-        label='Ім\'я користувача',
+        label='Ім\'я користувача чи email',
         widget=forms.TextInput(
             attrs={
                 'type': 'text',
                 'class': 'form-control',
-                'placeholder': 'Username',
+                'placeholder': 'Ім\'я користувача чи email',
             },
         ),
     )
@@ -101,7 +108,7 @@ class LoginForm(forms.Form):
             attrs={
                 'type': 'password',
                 'class': 'form-control',
-                'placeholder': 'Password',
+                'placeholder': 'Пароль',
             }
         ),
     )
