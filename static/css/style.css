@@ -21,13 +21,14 @@ a {
     vertical-align: middle;
 }
 
-html, body {
-    height: 100%;
+html {
+    min-height: 100%;
 }
 
 body {
     display: flex;
     flex-flow: column;
+    height: 100%;
 }
 
 header {
