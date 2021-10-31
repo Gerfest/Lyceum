@@ -111,12 +111,16 @@ class LoginView(BaseView):
     def __init__(self):
         """__init__ redefinition."""
         super().__init__()
+        self.user = None
         self.template_name = 'registration/login.html'
 
     def post(self, request):
         """Redefining "post" function to login user."""
         super().post(request)
         self.check_user_existence(request)
+        if self.user is not None and self.user.is_active:
+            login(request, self.user)
+            return redirect('home')
         self.context.update({
             'login_form': LoginForm(request.POST),
         })
@@ -132,18 +136,16 @@ class LoginView(BaseView):
         return self.base_render(request)
 
     def check_user_existence(self, request):
-        user = None
+        self.user = None
         if User.objects.filter(email=request.POST.get('username')).exists():
-            user = authenticate(email=request.POST.get('username'),
-                                password=request.POST.get('password')
-                                )
+            user = User.objects.get(email=request.POST.get('username'))
+            self.user = authenticate(username=user.username,
+                                     password=request.POST.get('password')
+                                     )
         if User.objects.filter(username=request.POST.get('username')).exists():
-            user = authenticate(username=request.POST.get('username'),
-                                password=request.POST.get('password')
-                                )
-        if user is not None and user.is_active:
-            login(request, user)
-            return redirect('home')
+            self.user = authenticate(username=request.POST.get('username'),
+                                     password=request.POST.get('password')
+                                     )
 
 
 class SignupView(BaseView):
@@ -161,7 +163,7 @@ class SignupView(BaseView):
         if form.is_valid():
             if not User.objects.filter(email=form.data[
                 'email']).exists() and not User.objects.filter(
-                    username=form.data['username']).exists():
+                username=form.data['username']).exists():
                 invitation = Invitation.objects.filter(
                     code=form.data['invitation_code'],
                     activated=False).first()
