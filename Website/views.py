@@ -253,6 +253,11 @@ class ProfileView(LoginRequiredMixin, BaseView):
     def save_profile_change_form(self, request):
         form = ChangeProfileForm(request.POST)
         if "change_profile" in request.POST:
+            if not Teacher.objects.filter(user=request.user).exists():
+                del form.fields['subjects']
+            if not Student.objects.filter(user=request.user).exists():
+                del form.fields['s_class']
+            self.context.update({"profile_change_form": form})
             if form.is_valid():
                 if form.cleaned_data["username"] != request.user.username:
                     request.user.username = form.cleaned_data["username"]
@@ -275,11 +280,8 @@ class ProfileView(LoginRequiredMixin, BaseView):
                 request.user.save()
             else:
                 self.messages.append("Форма заповнена неправильно")
-        if not Teacher.objects.filter(user=request.user).exists():
-            del form.fields['subjects']
-        if not Student.objects.filter(user=request.user).exists():
-            del form.fields['s_class']
-        self.context.update({"profile_change_form": form})
+        else:
+            self.set_profile_change_form(request)
 
     def get_user_info(self, request):
         self.context.update({"user": request.user})
