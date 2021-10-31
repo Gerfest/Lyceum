@@ -116,15 +116,11 @@ class LoginView(BaseView):
     def post(self, request):
         """Redefining "post" function to login user."""
         super().post(request)
-        user = authenticate(username=request.POST.get('username'),
-                            password=request.POST.get('password'))
-        if user is not None and user.is_active:
-            login(request, user)
-            return redirect('home')
+        self.check_user_existence(request)
         self.context.update({
             'login_form': LoginForm(request.POST),
         })
-        self.messages.append('Неправильний логін чи пароль')
+        self.messages.append('Неправильний логін/email чи пароль')
         return self.base_render(request)
 
     def get(self, request):
@@ -134,6 +130,20 @@ class LoginView(BaseView):
             return redirect('home')
         self.context['login_form'] = LoginForm()
         return self.base_render(request)
+
+    def check_user_existence(self, request):
+        user = None
+        if User.objects.filter(email=request.POST.get('username')).exists():
+            user = authenticate(email=request.POST.get('username'),
+                                password=request.POST.get('password')
+                                )
+        if User.objects.filter(username=request.POST.get('username')).exists():
+            user = authenticate(username=request.POST.get('username'),
+                                password=request.POST.get('password')
+                                )
+        if user is not None and user.is_active:
+            login(request, user)
+            return redirect('home')
 
 
 class SignupView(BaseView):
@@ -149,7 +159,9 @@ class SignupView(BaseView):
         super().post(request)
         form = SignUpForm(request.POST)
         if form.is_valid():
-            if not User.objects.filter(email=form.data['email']).exists():
+            if not User.objects.filter(email=form.data[
+                'email']).exists() and not User.objects.filter(
+                    username=form.data['username']).exists():
                 invitation = Invitation.objects.filter(
                     code=form.data['invitation_code'],
                     activated=False).first()
@@ -174,7 +186,7 @@ class SignupView(BaseView):
                         'Введено невірний код, або цей код вже використано')
             else:
                 self.messages.append(
-                    'Користувач з таким самим email вже існує')
+                    'Користувач з таким самим логіном чи email вже існує')
         else:
             self.messages.append('Помилка в заповненні форми')
         self.context.update({
