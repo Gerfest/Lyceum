@@ -95,18 +95,18 @@ table {
 
 @media (min-width: 1600px) {
     .main-sec {
-        margin: 0 20vw!important;
+        margin: 0 200px;
     }
 }
 
 @media (min-width: 1280px) and (max-width: 1600px) {
     .main-sec {
-        margin: 0 100px!important;
+        margin: 0 100px;
     }
 }
 
 @media (min-width: 768px) and (max-width: 1280px){
     .main-sec {
-        margin: 0 15px!important;
+        margin: 0 15px;
     }
 }
