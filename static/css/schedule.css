@@ -17,6 +17,9 @@ h1 {
     overflow: auto;
 }
 
+tr {
+    text-align: center;
+}
 
 @media (min-width: 1600px) {
     .main-sec {
