@@ -89,6 +89,7 @@ class BaseView(View):
                     if menu[it]["dropdown"][dropdown_it][
                         "url"] == str(request.path) + '?class=' + str(
                         get_class(request)):
+                        # noinspection PyUnresolvedReferences
                         menu[it]["dropdown"][dropdown_it]["active"] = 'active'
         return menu
 
@@ -496,7 +497,8 @@ class LessonCreateView(LoginRequiredMixin, BaseView):
                 lesson.link = lesson.link[7:]
             elif "https://" in lesson.link:
                 lesson.link = lesson.link[8:]
-            lesson.teacher = Teacher.objects.get(user=request.user)
+            if Teacher.objects.filter(user=request.user).exists():
+                lesson.teacher = Teacher.objects.get(user=request.user)
             lesson.save()
             self.messages.append(
                 f"Урок {lesson.subject} на {lesson.time_start.strftime('%H:%M:%S')} успішно створений")

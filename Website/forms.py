@@ -132,8 +132,11 @@ class CreateInvitationForm(forms.Form):
 class CreateLessonForm(ModelForm):
     def __init__(self, user=None, *args, **kwargs):
         super(CreateLessonForm, self).__init__(*args, **kwargs)
-        self.fields['subject'].queryset = Teacher.objects.get(
-            user=user).subjects.all()
+        if Teacher.objects.filter(user=user).exists():
+            self.fields['subject'].queryset = Teacher.objects.get(
+                user=user).subjects.all()
+        else:
+            self.fields['subject'].queryset = Subject.objects.all()
 
     class Meta:
         model = Lesson
