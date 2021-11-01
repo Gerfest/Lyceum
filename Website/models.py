@@ -65,10 +65,7 @@ class Lesson(models.Model):
     time_start = models.TimeField(verbose_name="Час початку",
                                   default=timezone.now)
     time_end = models.TimeField(verbose_name="Час кінця",
-                                default=timezone.now() +
-                                        timezone.timedelta(
-                                            minutes=45
-                                        )
+                                default=timezone.now()
                                 )
     teacher = models.ForeignKey(to=Teacher, on_delete=models.CASCADE,
                                 verbose_name="Вчитель", null=True)
