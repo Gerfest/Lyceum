@@ -71,7 +71,7 @@ class Lesson(models.Model):
                                         )
                                 )
     teacher = models.ForeignKey(to=Teacher, on_delete=models.CASCADE,
-                                verbose_name="Вчитель")
+                                verbose_name="Вчитель", null=True)
     s_class = models.ForeignKey(to=Class, on_delete=models.CASCADE,
                                 verbose_name="Клас")
     link = models.CharField(max_length=1000, blank=True,
