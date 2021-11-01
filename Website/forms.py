@@ -197,16 +197,17 @@ class ChangeProfileForm(forms.Form):
         )
     )
     phone = PhoneNumberField(
+        label='Телефон',
+        required=False,
         widget=forms.TextInput(
             attrs={
                 'class': 'form-control'
             }
         ),
-        label='Телефон',
-        required=False,
     )
     show_phone = forms.BooleanField(
         label="Показувати телефон іншим?",
+        required=False,
         widget=forms.CheckboxInput(
             attrs={
                 'class': 'form-check-input',

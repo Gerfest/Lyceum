@@ -21,6 +21,10 @@ th {
     text-align: center;
 }
 
+.change-week_button {
+    border-radius: 50%;
+}
+
 @media (min-width: 1600px) {
     .main-sec {
         margin: 0 20vw!important;

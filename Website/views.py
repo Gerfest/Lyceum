@@ -73,7 +73,8 @@ class BaseView(View):
                 )
             else:
                 menu.append({"label": "Розклад", "url": "/schedule/"})
-            if Teacher.objects.filter(user=request.user).exists():
+            if Teacher.objects.filter(
+                    user=request.user).exists() or request.user.is_staff:
                 menu.append({"label": "Створити урок", "url": "/create/"})
         else:
             menu.append({"label": "Розклад", "url": "/schedule/"})
@@ -84,6 +85,7 @@ class BaseView(View):
                     menu[it]["active"] = 'active'
             else:
                 for dropdown_it in range(len(menu[it]["dropdown"])):
+                    # noinspection PyTypeChecker
                     if menu[it]["dropdown"][dropdown_it][
                         "url"] == str(request.path) + '?class=' + str(
                         get_class(request)):
@@ -261,6 +263,8 @@ class ProfileView(LoginRequiredMixin, BaseView):
         if "change_profile" in request.POST:
             if not Teacher.objects.filter(user=request.user).exists():
                 del form.fields['subjects']
+                del form.fields['phone']
+                del form.fields['show_phone']
             if not Student.objects.filter(user=request.user).exists():
                 del form.fields['s_class']
             self.context.update({"profile_change_form": form})
@@ -308,7 +312,7 @@ class ProfileView(LoginRequiredMixin, BaseView):
             user_type.append("teacher")
             self.context.update(
                 {"teacher": Teacher.objects.get(user=request.user)})
-        if request.user.is_superuser:
+        if request.user.is_staff:
             user_type.append("admin")
         self.context.update({"user_type": user_type})
 
@@ -460,9 +464,10 @@ class ScheduleView(LoginRequiredMixin, BaseView):
             date_to = self.week[0] + timezone.timedelta(days=day + 1)
             day_lessons = []
             for lesson in self.lessons:
-                if date_from <= datetime.datetime.combine(lesson.date,
-                                                          lesson.time_start).replace(
-                    tzinfo=pytz.timezone("Europe/Kiev")) < date_to:
+                date_time = datetime.datetime.combine(lesson.date,
+                                                      lesson.time_start)
+                if date_from <= date_time.replace(
+                        tzinfo=pytz.timezone("Europe/Kiev")) < date_to:
                     day_lessons.append(lesson)
             table.append(day_lessons)
         self.context.update({"table": table})
