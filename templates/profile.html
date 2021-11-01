@@ -118,7 +118,12 @@
                                     {% endif %}
                                 </td>
                                 <td>{{ code.2.code }}</td>
-                                <td>{{ code.2.user.username }}</td>
+                                <td>{% if code.2.user.username %}
+                                    {{ code.2.user.username }}
+                                    ({{ code.2.user.last_name }}
+                                    {{ code.2.user.first_name }})
+                                {% endif %}
+                                </td>
                                 <td>
                                     {% if code.2.type == "Student" %}
                                         Учень
