@@ -17,32 +17,17 @@ h1 {
     overflow: auto;
 }
 
+/*noinspection CssOverwrittenProperties*/
 th {
     text-align: center;
+    width: 14.286%;
+    width: calc(100%/7);
+    width: -webkit-calc(100%/7);
 }
 
 .change-week_button {
     border-radius: 50%;
 }
-
-@media (min-width: 1600px) {
-    .main-sec {
-        margin: 0 20vw!important;
-    }
-}
-
-@media (min-width: 1280px) and (max-width: 1600px) {
-    .main-sec {
-        margin: 0 100px!important;
-    }
-}
-
-@media (min-width: 768px) and (max-width: 1280px){
-    .main-sec {
-        margin: 0 15px!important;
-    }
-}
-
 .main-sec {
     display: flex;
     flex-wrap: wrap;
@@ -106,4 +91,22 @@ table {
 .info {
     font-size: .9rem;
     font-weight: lighter;
+}
+
+@media (min-width: 1600px) {
+    .main-sec {
+        margin: 0 20vw!important;
+    }
+}
+
+@media (min-width: 1280px) and (max-width: 1600px) {
+    .main-sec {
+        margin: 0 100px!important;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 1280px){
+    .main-sec {
+        margin: 0 15px!important;
+    }
 }
