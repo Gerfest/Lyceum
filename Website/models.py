@@ -83,3 +83,10 @@ class Lesson(models.Model):
 
     def __str__(self):
         return f"{self.subject}, {self.s_class}, {self.date} {self.time_start}-{self.time_end}"
+
+
+class PageViews(models.Model):
+    page = models.CharField(max_length=100)
+    views = models.PositiveIntegerField(default=0)
+    last_day_views = models.PositiveIntegerField(default=0)
+    last_update = models.DateTimeField(default=timezone.now)

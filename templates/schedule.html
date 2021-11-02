@@ -9,6 +9,10 @@
 
 {% block content %}
     <h1>Розклад {{ class }}</h1>
+    {% if "staff" in user_type %}
+        <p style="text-align: center">Переглядів за день: {{ last_day_views }},
+            за весь час: {{ all_views }}</p>
+    {% endif %}
     <div class="week_selection">
         <a href="?class={{ class }}&date={{ last_week_day }}"
            class="btn btn-outline-secondary change-week_button">

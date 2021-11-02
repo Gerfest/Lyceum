@@ -14,6 +14,17 @@ from Website.forms import *
 from Website.models import Invitation, Student, Teacher
 
 
+def get_user_info(request):
+    user_type = []
+    if Student.objects.filter(user=request.user).exists():
+        user_type.append("student")
+    if Teacher.objects.filter(user=request.user).exists():
+        user_type.append("teacher")
+    if request.user.is_staff:
+        user_type.append("admin")
+    return  user_type
+
+
 class BaseView(View):
     """
     Base view class; every page view class is a child of BaseView;
@@ -301,20 +312,16 @@ class ProfileView(LoginRequiredMixin, BaseView):
 
     def get_user_info(self, request):
         self.context.update({"user": request.user})
-        user_type = []
-        if Student.objects.filter(user=request.user).exists():
-            user_type.append("student")
+        user_type = get_user_info(request)
+        if "student" in user_type:
             student = Student.objects.get(user=request.user)
             if student.s_class is None:
                 self.context.update({"noclass": True})
             self.context.update(
                 {"student": student})
-        if Teacher.objects.filter(user=request.user).exists():
-            user_type.append("teacher")
+        if "teacher" in user_type:
             self.context.update(
                 {"teacher": Teacher.objects.get(user=request.user)})
-        if request.user.is_staff:
-            user_type.append("admin")
         self.context.update({"user_type": user_type})
 
     def get_invitation_codes(self, request):
@@ -395,6 +402,7 @@ class ScheduleView(LoginRequiredMixin, BaseView):
 
     def get(self, request):
         super().get(request)
+        self.update_views(request)
         self.get_date(request)
         self.get_date_buttons_urls(request)
         s_class = get_class(request)
@@ -404,6 +412,20 @@ class ScheduleView(LoginRequiredMixin, BaseView):
         self.create_table(request)
         self.ask_for_class(request)
         return self.base_render(request)
+
+    def update_views(self, request):
+        if not PageViews.objects.filter(page="schedule").exists():
+            PageViews.objects.create(page="schedule")
+        page_views = PageViews.objects.get(page="schedule")
+        if timezone.now() > page_views.last_update + timezone.timedelta(days=1):
+            page_views.last_day_views = 0
+            page_views.last_update = timezone.now()
+        page_views.views += 1
+        page_views.last_day_views += 1
+        page_views.save()
+        self.context.update({"user_type": get_user_info(request)})
+        self.context.update({"last_day_views": page_views.last_day_views})
+        self.context.update({"all_views": page_views.views})
 
     def ask_for_class(self, request):
         if Student.objects.filter(user=request.user).exists():
