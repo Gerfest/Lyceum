@@ -21,8 +21,26 @@ def get_user_info(request):
     if Teacher.objects.filter(user=request.user).exists():
         user_type.append("teacher")
     if request.user.is_staff:
-        user_type.append("admin")
-    return  user_type
+        user_type.append("staff")
+    return user_type
+
+
+def get_class(request):
+    s_class = None
+    if Student.objects.filter(user=request.user).exists():
+        s_class = Student.objects.get(user=request.user).s_class
+    if s_class is None:
+        s_class_str = request.GET.get('class', None)
+        if s_class_str is None:
+            s_class = Class.objects.all()[0]
+        else:
+            digit = s_class_str.split('-')[0]
+            letter = s_class_str.split('-')[1]
+            if Class.objects.filter(digit=digit, letter=letter).exists():
+                s_class = Class.objects.get(digit=digit, letter=letter)
+            else:
+                s_class = Class.objects.all()[0]
+    return s_class
 
 
 class BaseView(View):
@@ -368,24 +386,6 @@ class ProfileView(LoginRequiredMixin, BaseView):
         if "delete_code" in request.POST:
             Invitation.objects.filter(invitor=request.user,
                                       code=request.POST["del_code"]).delete()
-
-
-def get_class(request):
-    s_class = None
-    if Student.objects.filter(user=request.user).exists():
-        s_class = Student.objects.get(user=request.user).s_class
-    if s_class is None:
-        s_class_str = request.GET.get('class', None)
-        if s_class_str is None:
-            s_class = Class.objects.all()[0]
-        else:
-            digit = s_class_str.split('-')[0]
-            letter = s_class_str.split('-')[1]
-            if Class.objects.filter(digit=digit, letter=letter).exists():
-                s_class = Class.objects.get(digit=digit, letter=letter)
-            else:
-                s_class = Class.objects.all()[0]
-    return s_class
 
 
 class ScheduleView(LoginRequiredMixin, BaseView):
