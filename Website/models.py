@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from django.db import models
 from django.utils import timezone
-from phonenumber_field.modelfields import PhoneNumberField
+from phonenumber_field import modelfields
 
 
 class Class(models.Model):
@@ -37,7 +37,7 @@ class Teacher(models.Model):
                                 related_name='teacher')
     subjects = models.ManyToManyField(to=Subject)
 
-    phone = PhoneNumberField(blank=True)
+    phone = modelfields.PhoneNumberField(blank=True)
 
     show_phone = models.BooleanField(default=True)
 
@@ -73,6 +73,8 @@ class Lesson(models.Model):
                                 verbose_name="Клас")
     link = models.CharField(max_length=1000, blank=True,
                             verbose_name="Посилання")
+    hide_link = models.BooleanField(default=False,
+                                           verbose_name="Приховати посилання до початку уроку?")
     type = models.CharField(verbose_name="Тип",
                             max_length=100,
                             choices=[("lesson", "Урок"), ("test", "Тест")],

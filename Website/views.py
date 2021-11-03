@@ -13,6 +13,8 @@ from django.views import View
 from Website.forms import *
 from Website.models import Invitation, Student, Teacher
 
+tz = pytz.timezone("Europe/Kiev")
+
 
 def get_user_info(request):
     user_type = []
@@ -448,13 +450,14 @@ class ScheduleView(LoginRequiredMixin, BaseView):
             date + timezone.timedelta(days=-7),
             'Y-m-d'
         )
-        date_from = datetime.datetime.combine(date,
-                                              datetime.time(0, 0)).replace(
-            tzinfo=pytz.timezone("Europe/Kiev"))
-        date_to = datetime.datetime.combine(
+        date_from = tz.localize(datetime.datetime.combine(
+            date,
+            datetime.time(0, 0)
+        )
+        )
+        date_to = tz.localize(datetime.datetime.combine(
             date_from + timezone.timedelta(days=6),
-            datetime.time(23, 59)).replace(
-            tzinfo=pytz.timezone("Europe/Kiev"))
+            datetime.time(23, 59)))
         self.week = (date_from, date_to)
         date = dateformat.format(date, 'M. d') + ' - ' + dateformat.format(
             date + timezone.timedelta(days=6), 'M. d, Y')
@@ -473,10 +476,18 @@ class ScheduleView(LoginRequiredMixin, BaseView):
     def sort_lessons(self, request):
         lessons = []
         for lesson in self.lessons:
-            if self.week[0] <= datetime.datetime.combine(
+            if self.week[0] <= tz.localize(datetime.datetime.combine(
                     lesson.date, datetime.time(0, 0)
-            ).replace(tzinfo=pytz.timezone("Europe/Kiev")) <= self.week[1]:
+            )) <= self.week[1]:
                 lessons.append(lesson)
+            print(tz.localize(datetime.datetime.combine(
+                lesson.date, lesson.time_start)))
+            print(timezone.now())
+            print(datetime.datetime.now())
+            if lesson.hide_link is True and tz.localize(
+                    datetime.datetime.combine(
+                        lesson.date, lesson.time_start)) < timezone.now():
+                lesson.hide_link = False
         lessons.sort(key=attrgetter("time_start"))
         self.lessons = lessons
 
@@ -489,8 +500,7 @@ class ScheduleView(LoginRequiredMixin, BaseView):
             for lesson in self.lessons:
                 date_time = datetime.datetime.combine(lesson.date,
                                                       lesson.time_start)
-                if date_from <= date_time.replace(
-                        tzinfo=pytz.timezone("Europe/Kiev")) < date_to:
+                if date_from <= tz.localize(date_time) < date_to:
                     day_lessons.append(lesson)
             table.append(day_lessons)
         self.context.update({"table": table})

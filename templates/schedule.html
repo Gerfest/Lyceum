@@ -46,12 +46,23 @@
                         <div class="cell-wrap">
                             {% for lesson in day %}
                                 <a target="_blank"
-                                        {% if lesson.link %}
+                                        {% if lesson.link and not lesson.hide_link %}
                                    href="//{{ lesson.link }}"
                                         {% endif %}
                                    class="task_card {{ lesson.type }}_card">
                                     <h5>{{ lesson.subject }}</h5>
                                     <span>{{ lesson.description }}</span>
+                                    {% if lesson.hide_link %}
+                                        <span>Посилання приховане до початку
+                                            {% if lesson.type == "lesson" %}
+                                                уроку
+                                            {% elif lesson.type == "test" %}
+                                                тесту
+                                            {% else %}
+                                                {{ lesson.type }}
+                                            {% endif %}
+                                        </span>
+                                    {% endif %}
                                     <span class="info">
                                         {% if lesson.type == "lesson" %}
                                             Урок

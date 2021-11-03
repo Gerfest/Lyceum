@@ -31,10 +31,14 @@ form {
     flex-direction: row;
     justify-content: space-between;
     margin: 10px 5px;
+    flex-wrap: wrap;
+    align-items: center;
 }
 
 .form-label {
     margin-right: 10px;
+    margin-bottom: 0;
+    width: calc(50% - 10px);
 }
 
 .field > *:not(.form-label) {

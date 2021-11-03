@@ -1,8 +1,8 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.forms import ModelForm
+from phonenumber_field import formfields
 from Website.models import *
-from phonenumber_field.formfields import PhoneNumberField
 
 
 class SignUpForm(UserCreationForm):
@@ -132,20 +132,25 @@ class CreateInvitationForm(forms.Form):
 class CreateLessonForm(ModelForm):
     def __init__(self, user=None, *args, **kwargs):
         super(CreateLessonForm, self).__init__(*args, **kwargs)
+        self.set_widget()
         if Teacher.objects.filter(user=user).exists():
             self.fields['subject'].queryset = Teacher.objects.get(
                 user=user).subjects.all()
         else:
             self.fields['subject'].queryset = Subject.objects.all()
+        set_class_names = ['subject']
+        for name in set_class_names:
+            self.fields[name].widget.attrs["class"] = 'form-control'
+
+    def set_widget(self):
+        self.fields['date'].widget = forms.DateInput(attrs={'type': 'date'})
+        self.fields['time_start'].widget = forms.DateInput(
+            attrs={'type': 'time'})
+        self.fields['time_end'].widget = forms.DateInput(attrs={'type': 'time'})
 
     class Meta:
         model = Lesson
         exclude = ['teacher']
-        widgets = {
-            'date': forms.DateInput(attrs={'type': 'date'}),
-            'time_start': forms.DateInput(attrs={'type': 'time'}),
-            'time_end': forms.DateInput(attrs={'type': 'time'}),
-        }
 
 
 class ChangeProfileForm(forms.Form):
@@ -199,7 +204,7 @@ class ChangeProfileForm(forms.Form):
             }
         )
     )
-    phone = PhoneNumberField(
+    phone = formfields.PhoneNumberField(
         label='Телефон',
         required=False,
         widget=forms.TextInput(
