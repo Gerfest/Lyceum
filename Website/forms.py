@@ -1,7 +1,9 @@
+import pytz
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.forms import ModelForm
 from phonenumber_field import formfields
+
 from Website.models import *
 
 
@@ -133,20 +135,46 @@ class CreateLessonForm(ModelForm):
     def __init__(self, user=None, *args, **kwargs):
         super(CreateLessonForm, self).__init__(*args, **kwargs)
         self.set_widget()
-        if Teacher.objects.filter(user=user).exists():
+        self.user = user
+        self.set_subjects()
+        self.set_classes()
+        self.set_initials()
+
+    def set_initials(self):
+        tz = pytz.timezone("Europe/Kiev")
+        now = timezone.now().astimezone(tz)
+        time_start = now.replace(minute=0)+timezone.timedelta(hours=1)
+        time_end = time_start.replace(minute=45)
+        self.initial['time_start'] = time_start.strftime('%H:%M')
+        self.initial['time_end'] = time_end.strftime('%H:%M')
+        self.initial["date"] = time_start.strftime('%Y-%m-%d')
+
+    def set_classes(self):
+        form_control = ['subject', 'date', 'time_start', 'time_end', 's_class',
+                        'link', 'type', 'description']
+        form_check = ['hide_link']
+        for form in form_control:
+            self.fields[form].widget.attrs["class"] = 'form-control'
+        for form in form_check:
+            self.fields[form].widget.attrs["class"] = 'form-check-input'
+
+    def set_subjects(self):
+        if Teacher.objects.filter(user=self.user).exists():
             self.fields['subject'].queryset = Teacher.objects.get(
-                user=user).subjects.all()
+                user=self.user).subjects.all()
         else:
             self.fields['subject'].queryset = Subject.objects.all()
-        set_class_names = ['subject']
-        for name in set_class_names:
-            self.fields[name].widget.attrs["class"] = 'form-control'
 
     def set_widget(self):
-        self.fields['date'].widget = forms.DateInput(attrs={'type': 'date'})
+        self.fields['date'].widget = forms.DateInput(
+            attrs={'type': 'date', "value": "2021.11.03"}
+        )
         self.fields['time_start'].widget = forms.DateInput(
-            attrs={'type': 'time'})
-        self.fields['time_end'].widget = forms.DateInput(attrs={'type': 'time'})
+            attrs={'type': 'time'}
+        )
+        self.fields['time_end'].widget = forms.DateInput(
+            attrs={'type': 'time'}
+        )
 
     class Meta:
         model = Lesson

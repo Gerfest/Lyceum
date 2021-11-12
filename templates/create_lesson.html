@@ -13,10 +13,11 @@
         <form method="post">
             {% csrf_token %}
             {% for field in form %}
-                <div class="field">
+                <div class="field{% if field.field.widget.input_type == "checkbox" %} form-switch{% endif %}">
                     <label class="form-label"
                            style='font-size: 20px; line-height: 30px;'
-                           for="{{ field.name }}">{{ field.label }}</label>
+                           for="{{ field.name }}">{{ field.label }}
+                    </label>
                     {{ field }}
                     {% if field.help_text %}
                         <span>{{ field.help_text }}</span>

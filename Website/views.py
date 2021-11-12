@@ -3,7 +3,7 @@ import secrets
 import string
 from operator import attrgetter
 
-import pytz
+from django.conf import settings
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect
@@ -13,7 +13,11 @@ from django.views import View
 from Website.forms import *
 from Website.models import Invitation, Student, Teacher
 
-tz = pytz.timezone("Europe/Kiev")
+TZ = pytz.timezone(settings.TIME_ZONE)
+UTC = pytz.timezone("UTC")
+
+
+# def replace_kiev_tz_in_db(request)
 
 
 def get_user_info(request):
@@ -450,12 +454,12 @@ class ScheduleView(LoginRequiredMixin, BaseView):
             date + timezone.timedelta(days=-7),
             'Y-m-d'
         )
-        date_from = tz.localize(datetime.datetime.combine(
+        date_from = TZ.localize(datetime.datetime.combine(
             date,
             datetime.time(0, 0)
         )
         )
-        date_to = tz.localize(datetime.datetime.combine(
+        date_to = TZ.localize(datetime.datetime.combine(
             date_from + timezone.timedelta(days=6),
             datetime.time(23, 59)))
         self.week = (date_from, date_to)
@@ -476,18 +480,23 @@ class ScheduleView(LoginRequiredMixin, BaseView):
     def sort_lessons(self, request):
         lessons = []
         for lesson in self.lessons:
-            if self.week[0] <= tz.localize(datetime.datetime.combine(
-                    lesson.date, datetime.time(0, 0)
-            )) <= self.week[1]:
+            if self.week[0] <= UTC.localize(datetime.datetime.combine(
+                    lesson.date, lesson.time_start
+            )).astimezone(TZ) <= self.week[1]:
                 lessons.append(lesson)
-            print(tz.localize(datetime.datetime.combine(
-                lesson.date, lesson.time_start)))
-            print(timezone.now())
-            print(datetime.datetime.now())
-            if lesson.hide_link is True and tz.localize(
+            if lesson.hide_link is True and UTC.localize(
                     datetime.datetime.combine(
                         lesson.date, lesson.time_start)) < timezone.now():
                 lesson.hide_link = False
+            time_start = UTC.localize(datetime.datetime.combine(
+                lesson.date, lesson.time_start
+            )).astimezone(TZ)
+            time_end = UTC.localize(datetime.datetime.combine(
+                lesson.date, lesson.time_end
+            )).astimezone(TZ)
+            lesson.time_start = time_start.time()
+            lesson.time_end = time_end.time()
+            lesson.date = time_start.date()
         lessons.sort(key=attrgetter("time_start"))
         self.lessons = lessons
 
@@ -500,7 +509,7 @@ class ScheduleView(LoginRequiredMixin, BaseView):
             for lesson in self.lessons:
                 date_time = datetime.datetime.combine(lesson.date,
                                                       lesson.time_start)
-                if date_from <= tz.localize(date_time) < date_to:
+                if date_from <= TZ.localize(date_time) < date_to:
                     day_lessons.append(lesson)
             table.append(day_lessons)
         self.context.update({"table": table})
@@ -531,9 +540,20 @@ class LessonCreateView(LoginRequiredMixin, BaseView):
                 lesson.link = lesson.link[8:]
             if Teacher.objects.filter(user=request.user).exists():
                 lesson.teacher = Teacher.objects.get(user=request.user)
+            datetime_start = datetime.datetime.combine(lesson.date,
+                                                       lesson.time_start)
+            tz_time_start = TZ.localize(datetime_start)
+            utc_start_date = tz_time_start.astimezone(pytz.timezone('UTC'))
+            datetime_end = datetime.datetime.combine(lesson.date,
+                                                     lesson.time_end)
+            tz_time_end = TZ.localize(datetime_end)
+            utc_end_date = tz_time_end.astimezone(pytz.timezone('UTC'))
+            lesson.time_start = utc_start_date.time()
+            lesson.time_end = utc_end_date.time()
+            lesson.date = utc_start_date.date()
             lesson.save()
             self.messages.append(
-                f"Урок {lesson.subject} на {lesson.time_start.strftime('%H:%M:%S')} успішно створений")
+                f"Урок {lesson.subject} на {UTC.localize(datetime.datetime.combine(lesson.date, lesson.time_start)).astimezone(TZ).strftime('%H:%M:%S')} успішно створений")
             self.context.update({"form": form})
         else:
             self.messages.append("Форма заповнена неправильно")
