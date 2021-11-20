@@ -30,17 +30,20 @@
             <thead>
             <tr>
                 {% for day in week_days %}
-                    <th scope="col"><span class="day_text">{{ day }}</span><br/><span class="day_num">{{ day.date }}</span></th>
+                    <th class="{{ day.active }}" scope="col">
+                        <span class="day_text">{{ day }}</span>
+                        <br/>
+                        <span class="day_num">{{ day.date }}</span>
+                    </th>
                 {% endfor %}
             </tr>
             </thead>
             <tbody>
             <tr>
                 {% for day in table %}
-                    {# Понедельник #}
-                    <td>
+                    <td class="{{ day.active }}">
                         <div class="cell-wrap">
-                            {% for lesson in day %}
+                            {% for lesson in day.lessons %}
                                 <a target="_blank"
                                         {% if lesson.link and not lesson.hide_link %}
                                    href="//{{ lesson.link }}"

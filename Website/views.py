@@ -494,23 +494,30 @@ class ScheduleView(LoginRequiredMixin, BaseView):
         date = self.date
 
         class Day:
-            def __init__(self, day_text: str, delta: int):
+            def __init__(self, day_text: str, delta: int, base_class):
+                self.base_class = base_class
                 self.day: str = day_text
                 self.delta: int = delta
                 self.date: int = 0
+                self.active = ""
                 self.calculate_date()
 
             def calculate_date(self):
                 self.date = (date + timezone.timedelta(
                     days=-date.weekday() + self.delta)).day
+                if (self.base_class.date + timezone.timedelta(
+                        days=self.delta - 1)).date() == timezone.now().date():
+                    self.active = "active"
 
             def __str__(self):
                 return self.day
 
         self.context.update(
-            {"week_days": [Day("Пн", 0), Day("Вт", 1), Day("Ср", 2),
-                           Day("Чт", 3), Day("Пт", 4), Day("Сб", 5),
-                           Day("Нд", 6)]})
+            {"week_days": [Day("Пн", 0, self), Day("Вт", 1, self),
+                           Day("Ср", 2, self),
+                           Day("Чт", 3, self), Day("Пт", 4, self),
+                           Day("Сб", 5, self),
+                           Day("Нд", 6, self)]})
         return self.base_render(request)
 
     def update_views(self, request):
@@ -606,7 +613,10 @@ class ScheduleView(LoginRequiredMixin, BaseView):
                                                       lesson.time_start)
                 if date_from <= TZ.localize(date_time) < date_to:
                     day_lessons.append(lesson)
-            table.append(day_lessons)
+            column = {"lessons": day_lessons}
+            if (self.date + timezone.timedelta(days=day-1)).date() == timezone.now().date():
+                column.update({"active": "active"})
+            table.append(column)
         self.context.update({"table": table})
 
 

@@ -57,6 +57,7 @@ th {
 
 table {
     flex: 1 1 auto;
+    border-radius: 20px;
 }
 
 .task_card {
@@ -107,6 +108,10 @@ table {
 .day_num {
     font-size: 1.2rem;
     font-weight: 600;
+}
+
+th.active, td.active {
+    background-color: #bcd5ff !important;
 }
 
 @media (min-width: 1600px) {
