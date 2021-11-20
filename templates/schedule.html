@@ -29,13 +29,9 @@
         <table class="table table-bordered table-primary">
             <thead>
             <tr>
-                <th scope="col">Понеділок</th>
-                <th scope="col">Вівторок</th>
-                <th scope="col">Середа</th>
-                <th scope="col">Четвер</th>
-                <th scope="col">П'ятниця</th>
-                <th scope="col">Субота</th>
-                <th scope="col">Неділя</th>
+                {% for day in week_days %}
+                    <th scope="col"><span class="day_text">{{ day }}</span><br/><span class="day_num">{{ day.date }}</span></th>
+                {% endfor %}
             </tr>
             </thead>
             <tbody>

@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600&display=swap');
+
 html, body {
     height: 100%;
 }
@@ -21,13 +23,14 @@ h1 {
 th {
     text-align: center;
     width: 14.286%;
-    width: calc(100%/7);
-    width: -webkit-calc(100%/7);
+    width: calc(100% / 7);
+    width: -webkit-calc(100% / 7);
 }
 
 .change-week_button {
     border-radius: 50%;
 }
+
 .main-sec {
     display: flex;
     flex-wrap: wrap;
@@ -93,6 +96,19 @@ table {
     font-weight: lighter;
 }
 
+.day_text, .day_num {
+    font-family: 'Open Sans', Roboto, Arial, sans-serif;
+}
+
+.day_text {
+    font-weight: 400;
+}
+
+.day_num {
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
 @media (min-width: 1600px) {
     .main-sec {
         margin: 0 200px;
@@ -105,7 +121,7 @@ table {
     }
 }
 
-@media (min-width: 768px) and (max-width: 1280px){
+@media (min-width: 768px) and (max-width: 1280px) {
     .main-sec {
         margin: 0 15px;
     }

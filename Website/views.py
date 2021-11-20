@@ -491,6 +491,26 @@ class ScheduleView(LoginRequiredMixin, BaseView):
         self.sort_lessons(request)
         self.create_table(request)
         self.ask_for_class(request)
+        date = self.date
+
+        class Day:
+            def __init__(self, day_text: str, delta: int):
+                self.day: str = day_text
+                self.delta: int = delta
+                self.date: int = 0
+                self.calculate_date()
+
+            def calculate_date(self):
+                self.date = (date + timezone.timedelta(
+                    days=-date.weekday() + self.delta)).day
+
+            def __str__(self):
+                return self.day
+
+        self.context.update(
+            {"week_days": [Day("Пн", 0), Day("Вт", 1), Day("Ср", 2),
+                           Day("Чт", 3), Day("Пт", 4), Day("Сб", 5),
+                           Day("Нд", 6)]})
         return self.base_render(request)
 
     def update_views(self, request):
@@ -537,9 +557,10 @@ class ScheduleView(LoginRequiredMixin, BaseView):
             date_from + timezone.timedelta(days=6),
             datetime.time(23, 59)))
         self.week = (date_from, date_to)
-        date = dateformat.format(date, 'M. d') + ' - ' + dateformat.format(
+        date_str = dateformat.format(date, 'M. d') + ' - ' + dateformat.format(
             date + timezone.timedelta(days=6), 'M. d, Y')
-        self.context.update({"date": date})
+        self.context.update({"date": date_str})
+        self.context.update({"date_num": dateformat.format(date, 'd')})
         self.context.update({"last_week_day": last_week_day})
         self.context.update({"next_week_day": next_week_day})
 
