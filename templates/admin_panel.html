@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+    Панель керування
+{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/admin_panel.css' %}">
+{% endblock %}
+
+{% block content %}
+    <h1>Панель керування</h1>
+    <div class="section-nav navbar navbar-expand-lg navbar-light">
+        <div class="container-fluid">
+            <span class="navbar-brand">Категорії</span>
+            <button class="navbar-toggler" type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#navbarNavAltMarkup"
+                    aria-controls="navbarNavAltMarkup" aria-expanded="false"
+                    aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                <div class="navbar-nav">
+                    <a class="nav-link change_toggle active" aria-current="page"
+                       href="#">Статистика</a>
+                    <a class="nav-link change_toggle" href="#">Користувачі</a>
+                    <a class="nav-link change_toggle" href="#">Керування
+                        часом</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {# Main #}
+    <section class="section-toggle">
+        <p>Усього учнів:</p>
+        <span>{{ student_amount }}</span>
+        <hr>
+        <p>Усього вчителів:</p>
+        <span>{{ teacher_amount }}</span>
+        <hr>
+    </section>
+    {# Users #}
+    <section class="section-toggle hidden">
+        <div class="table-wrapper">
+            <table class="table table-striped table-bordered js-sort-table">
+                <thead>
+                <tr>
+                    <th scope="col">Код</th>
+                    <th scope="col">Тип</th>
+                    <th scope="col">Ім'я користувача</th>
+                    <th scope="col">ПІБ</th>
+                    <th scope="col">Запросив</th>
+                    <th scope="col">Дата реєстрації</th>
+                    <th scope="col">В останнє заходив</th>
+                    <th scope="col">Заблокований</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for invitation in invitations %}
+                    <tr>
+                        <td>{{ invitation.code }}</td>
+                        <td>{{ invitation.type }}</td>
+                        <td>{{ invitation.user }}</td>
+                        <td>{{ invitation.user.first_name }} {{ invitation.user.last_name }}</td>
+                        <td>{{ invitation.invitor.first_name }} {{ invitation.invitor.last_name }}</td>
+                        <td>{{ invitation.user.date_joined }}</td>
+                        <td>{{ invitation.user.last_login }}</td>
+                        <td>
+                            {% if invitation.user.is_active %}
+                                -
+                            {% else %}
+                                +
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+    {# Timezone #}
+    <section class="section-toggle hidden">
+        <h3>Змінити часову зону</h3>
+        <p>Усі уроки у базі даних зберігаються без часової зони - якщо ти
+            створив урок на 12:00 в Україні, в базі даних він буде записан,
+            наприклад, на 10:00, якщо в Україні часова зона GMT+2. Але при зміні
+            часової зони (при переході на/з зимового часу і т.п.) уроки, які ще
+            вчора були створені на 12:00 тепер будуть показані з часом 13:00.
+            Щоб цього не сталося, на сайті автоматично оновлюється часова зона
+            при переході на зимовий час та на літній. Якщо це не відбулося
+            автоматично, ви можете це зробити на цій сторінці.
+        </p>
+        <form method="post">
+            {% csrf_token %}
+            {% for field in form %}
+                <div class="field">
+                    <label class="form-label"
+                           style='font-size: 20px; line-height: 30px;'
+                           for="{{ field.name }}">{{ field.label }}
+                    </label>
+                    {{ field }}
+                    {% if field.help_text %}
+                        <span>{{ field.help_text }}</span>
+                    {% endif %}
+                    {% for error in field.errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+            <button name="create" id="create"
+                    class="button btn btn-primary submit_button"
+                    style='margin: 15px;' type="submit">
+                Перенести
+            </button>
+        </form>
+    </section>
+{% endblock %}
+
+{% block js %}
+    <script src="{% static 'js/sort-table.js' %}"></script>
+    <script src="{% static 'js/admin_panel.js' %}"></script>
+{% endblock %}

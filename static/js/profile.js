@@ -1,8 +1,6 @@
 'use strict'
 
 window.onload = function () {
-    console.log("JS loaded")
-
     let profile_data = document.getElementById("profile_data")
     let profile_change = document.getElementById("profile_change")
     let buttons = document.querySelectorAll('.change_toggle')

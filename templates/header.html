@@ -41,25 +41,27 @@
                     {% endif %}
                 {% endfor %}
             </ul>
-            <form class="d-flex">
-                {% if user.is_authenticated %}
-                    <a href="/profile/" class="profile_link">
-                        <img
-                                alt="profile"
-                                src="{% static 'img/profile_pic.svg' %}"
-                                width="30" height="30"/>
-                        <span>Профіль</span>
-                    </a>
-                {% else %}
-                    <a href="/login/" class="profile_link">
-                        <img
-                                alt="profile"
-                                src="{% static 'img/profile_pic.svg' %}"
-                                width="30" height="30"/>
-                        <span>Увійти</span>
-                    </a>
-                {% endif %}
-            </form>
+            <ul class="navbar-nav mb-lg-0">
+                <li class="nav-item">
+                    {% if user.is_authenticated %}
+                        <a href="/profile/" class="profile_link">
+                            <img
+                                    alt="profile"
+                                    src="{% static 'img/profile_pic.svg' %}"
+                                    width="30" height="30"/>
+                            <span>Профіль</span>
+                        </a>
+                    {% else %}
+                        <a href="/login/" class="profile_link">
+                            <img
+                                    alt="profile"
+                                    src="{% static 'img/profile_pic.svg' %}"
+                                    width="30" height="30"/>
+                            <span>Увійти</span>
+                        </a>
+                    {% endif %}
+                </li>
+            </ul>
         </div>
     </div>
 </nav>

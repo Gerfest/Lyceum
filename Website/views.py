@@ -17,9 +17,6 @@ TZ = pytz.timezone(settings.TIME_ZONE)
 UTC = pytz.timezone("UTC")
 
 
-# def replace_kiev_tz_in_db(request)
-
-
 def get_user_info(request):
     user_type = []
     if Student.objects.filter(user=request.user).exists():
@@ -66,10 +63,10 @@ class BaseView(View):
         self.messages = []
 
     def get(self, request):
-        return self.base_context(request)
+        return redirect('home')
 
     def post(self, request):
-        return self.base_context(request)
+        return redirect('home')
 
     def base_context(self, request):
         """
@@ -83,10 +80,26 @@ class BaseView(View):
 
     def base_render(self, request):
         """Function to render page with context."""
+        self.base_context(request)
         return render(request, self.template_name, self.context)
 
     @staticmethod
-    def get_base_menu(request) -> list:
+    def set_active(menu, request):
+        for it in range(len(menu)):
+            if not "dropdown" in menu[it]:
+                if menu[it]["url"] == request.path:
+                    menu[it]["active"] = 'active'
+            else:
+                for dropdown_it in range(len(menu[it]["dropdown"])):
+                    # noinspection PyTypeChecker
+                    if menu[it]["dropdown"][dropdown_it][
+                        "url"] == str(request.path) + '?class=' + str(
+                        get_class(request)):
+                        # noinspection PyUnresolvedReferences
+                        menu[it]["dropdown"][dropdown_it]["active"] = 'active'
+        return menu
+
+    def get_base_menu(self, request) -> list:
         """Function to obtain the basic parameters of the context."""
         menu = [
             {"label": "Головна", "url": "/"},
@@ -113,20 +126,81 @@ class BaseView(View):
                 menu.append({"label": "Створити урок", "url": "/create/"})
         else:
             menu.append({"label": "Розклад", "url": "/schedule/"})
-
-        for it in range(len(menu)):
-            if not "dropdown" in menu[it]:
-                if menu[it]["url"] == request.path:
-                    menu[it]["active"] = 'active'
-            else:
-                for dropdown_it in range(len(menu[it]["dropdown"])):
-                    # noinspection PyTypeChecker
-                    if menu[it]["dropdown"][dropdown_it][
-                        "url"] == str(request.path) + '?class=' + str(
-                        get_class(request)):
-                        # noinspection PyUnresolvedReferences
-                        menu[it]["dropdown"][dropdown_it]["active"] = 'active'
+        if request.user.is_staff or request.user.is_superuser:
+            menu.append({"label": "Панель керування", "url": "/control/"})
+        menu = self.set_active(menu, request)
         return menu
+
+
+class AdminPanel(BaseView):
+    def __init__(self):
+        super().__init__()
+        self.template_name = 'admin_panel.html'
+
+    def get(self, request):
+        super().get(request)
+        self.both(request)
+        change_tz_form = ChangeTZForm()
+        self.context.update({"form": change_tz_form})
+        return self.base_render(request)
+
+    def post(self, request):
+        super(AdminPanel, self).post(request)
+        self.both(request)
+        self.change_tz(request)
+        return self.base_render(request)
+
+    def both(self, request):
+        if not (request.user.is_staff or request.user.is_superuser):
+            return redirect('home')
+        self.get_user_table()
+        self.get_statistics()
+
+    def change_tz(self, request):
+        change_tz_form = ChangeTZForm(request.POST)
+        if change_tz_form.is_valid():
+            self.replace_kiev_tz_in_db(change_tz_form.cleaned_data["start_tz"],
+                                       change_tz_form.cleaned_data["end_tz"],
+                                       )
+
+    def get_user_table(self):
+        invitations = Invitation.objects.filter(activated=True)
+        self.context.update({"invitations": invitations})
+
+    def get_statistics(self):
+        self.context.update({"student_amount": len(Student.objects.all())})
+        self.context.update({"teacher_amount": len(Teacher.objects.all())})
+
+    @staticmethod
+    def replace_kiev_tz_in_db(start_tz_str: str, end_tz_str: str):
+        start_tz = pytz.timezone(start_tz_str)
+        end_tz = pytz.timezone(end_tz_str)
+        lessons = Lesson.objects.all()
+        for lesson in lessons:
+            # Start time
+            datetime_start = datetime.datetime.combine(
+                lesson.date,
+                lesson.time_start,
+            )
+            tz_datetime_start = start_tz.localize(datetime_start)
+            final_datetime_start = tz_datetime_start.astimezone(
+                end_tz
+            )
+
+            # End time
+            datetime_end = datetime.datetime.combine(
+                lesson.date,
+                lesson.time_end,
+            )
+            tz_datetime_end = start_tz.localize(datetime_end)
+            final_datetime_end = tz_datetime_end.astimezone(
+                end_tz
+            )
+
+            lesson.time_start = final_datetime_start.time()
+            lesson.time_end = final_datetime_end.time()
+            lesson.date = final_datetime_start.date()
+            lesson.save()
 
 
 class IndexView(BaseView):

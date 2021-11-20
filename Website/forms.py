@@ -143,7 +143,7 @@ class CreateLessonForm(ModelForm):
     def set_initials(self):
         tz = pytz.timezone("Europe/Kiev")
         now = timezone.now().astimezone(tz)
-        time_start = now.replace(minute=0)+timezone.timedelta(hours=1)
+        time_start = now.replace(minute=0) + timezone.timedelta(hours=1)
         time_end = time_start.replace(minute=45)
         self.initial['time_start'] = time_start.strftime('%H:%M')
         self.initial['time_end'] = time_end.strftime('%H:%M')
@@ -260,4 +260,26 @@ class ChangeProfileForm(forms.Form):
                 'class': 'form-select'
             }
         )
+    )
+
+
+class ChangeTZForm(forms.Form):
+    tz_choices = []
+    for tz in range(27):
+        elem = ''
+        if tz - 14 > 0:
+            elem += f'+{str(tz - 14)}'
+        else:
+            if tz != 14:
+                elem += str(tz - 14)
+        tz_choices.append(('Etc/GMT'+elem, 'GMT'+elem))
+    start_tz = forms.ChoiceField(
+        choices=tz_choices,
+        label="Перенести з",
+        initial='Etc/GMT+2'
+    )
+    end_tz = forms.ChoiceField(
+        choices=tz_choices,
+        label="Перенести на",
+        initial='Etc/GMT+2'
     )
