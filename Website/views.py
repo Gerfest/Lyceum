@@ -506,18 +506,25 @@ class ScheduleView(LoginRequiredMixin, BaseView):
                 self.date = (date + timezone.timedelta(
                     days=-date.weekday() + self.delta)).day
                 if (self.base_class.date + timezone.timedelta(
-                        days=self.delta - 1)).date() == timezone.now().date():
+                        days=self.delta)).date() == timezone.now().date():
                     self.active = "active"
 
             def __str__(self):
                 return self.day
 
         self.context.update(
-            {"week_days": [Day("Пн", 0, self), Day("Вт", 1, self),
-                           Day("Ср", 2, self),
-                           Day("Чт", 3, self), Day("Пт", 4, self),
-                           Day("Сб", 5, self),
-                           Day("Нд", 6, self)]})
+            {"week_days":
+                [
+                    Day("Пн", 0, self),
+                    Day("Вт", 1, self),
+                    Day("Ср", 2, self),
+                    Day("Чт", 3, self),
+                    Day("Пт", 4, self),
+                    Day("Сб", 5, self),
+                    Day("Нд", 6, self),
+                ]
+            }
+        )
         return self.base_render(request)
 
     def update_views(self, request):
@@ -567,7 +574,6 @@ class ScheduleView(LoginRequiredMixin, BaseView):
         date_str = dateformat.format(date, 'M. d') + ' - ' + dateformat.format(
             date + timezone.timedelta(days=6), 'M. d, Y')
         self.context.update({"date": date_str})
-        self.context.update({"date_num": dateformat.format(date, 'd')})
         self.context.update({"last_week_day": last_week_day})
         self.context.update({"next_week_day": next_week_day})
 
@@ -614,7 +620,8 @@ class ScheduleView(LoginRequiredMixin, BaseView):
                 if date_from <= TZ.localize(date_time) < date_to:
                     day_lessons.append(lesson)
             column = {"lessons": day_lessons}
-            if (self.date + timezone.timedelta(days=day-1)).date() == timezone.now().date():
+            if (self.date + timezone.timedelta(
+                    days=day)).date() == timezone.now().date():
                 column.update({"active": "active"})
             table.append(column)
         self.context.update({"table": table})
