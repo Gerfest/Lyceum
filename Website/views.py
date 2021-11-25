@@ -482,6 +482,16 @@ class ScheduleView(LoginRequiredMixin, BaseView):
 
     def get(self, request):
         super().get(request)
+        self.both(request)
+        return self.base_render(request)
+
+    def post(self, request):
+        super(ScheduleView, self).post(request)
+        self.process_lesson_deletion(request)
+        self.both(request)
+        return self.base_render(request)
+
+    def both(self, request):
         self.update_views(request)
         self.get_date(request)
         self.get_date_buttons_urls(request)
@@ -491,6 +501,33 @@ class ScheduleView(LoginRequiredMixin, BaseView):
         self.sort_lessons(request)
         self.create_table(request)
         self.ask_for_class(request)
+        self.set_week_days(request)
+
+    def process_lesson_deletion(self, request):
+        if "lesson_delete" in request.POST:
+            if Lesson.objects.filter(id=request.POST["lesson_id"]).exists():
+                lesson = Lesson.objects.get(id=request.POST["lesson_id"])
+                if lesson.teacher is not None:
+                    if lesson.teacher.user == request.user:
+                        lesson.delete()
+                        self.messages.append(
+                            "Урок видалено"
+                        )
+                elif "staff" in get_user_info(request):
+                    lesson.delete()
+                    self.messages.append(
+                        "Урок видалено"
+                    )
+                else:
+                    self.messages.append(
+                        "Ви не є автором цього уроку чи адміністратором"
+                    )
+            else:
+                self.messages.append(
+                    "Уроку з таким ID не існує. Можливо, його вже видалено."
+                )
+
+    def set_week_days(self, request):
         date = self.date
 
         class Day:
@@ -525,7 +562,6 @@ class ScheduleView(LoginRequiredMixin, BaseView):
                 ]
             }
         )
-        return self.base_render(request)
 
     def update_views(self, request):
         if not PageViews.objects.filter(page="schedule").exists():
@@ -620,6 +656,7 @@ class ScheduleView(LoginRequiredMixin, BaseView):
                 if date_from <= TZ.localize(date_time) < date_to:
                     day_lessons.append(lesson)
             column = {"lessons": day_lessons}
+            print(f"{(self.date + timezone.timedelta(days=day)).date()}; {timezone.now().date()}")
             if (self.date + timezone.timedelta(
                     days=day)).date() == timezone.now().date():
                 column.update({"active": "active"})

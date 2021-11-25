@@ -44,11 +44,14 @@
                     <td class="{{ day.active }}">
                         <div class="cell-wrap">
                             {% for lesson in day.lessons %}
-                                <a target="_blank"
+                                <div
                                         {% if lesson.link and not lesson.hide_link %}
-                                   href="//{{ lesson.link }}"
+                                            {% if not lesson.teacher.user == user and not "staff" in user_type %}
+                                                onclick="window.location='//{{ lesson.link }}'"
+                                                style="cursor: pointer"
+                                            {% endif %}
                                         {% endif %}
-                                   class="task_card {{ lesson.type }}_card">
+                                                class="task_card {{ lesson.type }}_card">
                                     <h5>{{ lesson.subject }}</h5>
                                     <span>{{ lesson.description }}</span>
                                     {% if lesson.hide_link %}
@@ -73,7 +76,72 @@
                                     </span>
                                     <span class="info">{{ lesson.teacher.user.last_name }} {{ lesson.teacher.user.first_name }}</span>
                                     <span class="info">{{ lesson.time_start }}-{{ lesson.time_end }}</span>
-                                </a>
+                                    {% if "staff" in user_type or lesson.teacher.user == user %}
+                                        <div class="btn-group card_btn"
+                                             role="group">
+                                            {% if lesson.link %}
+                                                <a target="_blank"
+                                                   class="btn btn-outline-success"
+                                                   href='//{{ lesson.link }}'>
+                                                    <img class="link_img"
+                                                         alt="link img"
+                                                         src="{% static 'img/link_icon.svg' %}"/>
+                                                </a>
+                                            {% endif %}
+                                            <button type="button"
+                                                    class="btn btn-outline-danger"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#delete_lesson{{ lesson.id }}">
+                                                <img class="link_img"
+                                                     src="{% static 'img/delete_icon.svg' %}"
+                                                     alt="delete icon"/>
+                                            </button>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <div class="modal fade"
+                                     id="delete_lesson{{ lesson.id }}"
+                                     tabindex="-1"
+                                     aria-labelledby="exampleModalLabel"
+                                     aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title"
+                                                    id="exampleModalLabel">
+                                                    Видалення уроку</h5>
+                                                <button type="button"
+                                                        class="btn-close"
+                                                        data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                Ви впевнені, що бажаєте видалити
+                                                цей урок? Ви не зможете його
+                                                відновити, тільки створити
+                                                заново.
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button"
+                                                        class="btn btn-secondary"
+                                                        data-bs-dismiss="modal">
+                                                    Відмінити
+                                                </button>
+                                                <form method="post">
+                                                    {% csrf_token %}
+                                                    <input type="hidden"
+                                                           name="lesson_id"
+                                                           value="{{ lesson.id }}">
+                                                    <button name="lesson_delete"
+                                                            type="submit"
+                                                            class="btn btn-danger">
+                                                        Видалити
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             {% endfor %}
                         </div>
                     </td>

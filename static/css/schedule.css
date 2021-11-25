@@ -114,6 +114,31 @@ th.active, td.active {
     background-color: #bcd5ff !important;
 }
 
+.card_btn > a {
+    font-size: .75rem;
+}
+
+.card_btn > *.btn-outline-success {
+    background-color: rgba(25, 135, 84, 0.5);
+}
+
+.card_btn > *.btn-outline-success:hover {
+    background-color: rgba(25, 135, 84, 1);
+}
+
+.card_btn > *.btn-outline-danger {
+    background-color: rgba(220, 53, 69, 0.2);
+}
+
+.card_btn > *.btn-outline-danger:hover {
+    background-color: rgba(220, 53, 69, 1);
+}
+
+.link_img {
+    width: 1.5rem;
+    height: 1.5rem;
+}
+
 @media (min-width: 1600px) {
     .main-sec {
         margin: 0 200px;
