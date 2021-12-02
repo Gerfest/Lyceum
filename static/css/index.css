@@ -12,6 +12,7 @@
     height: 100%;
     padding: 10px;
     color: white;
+    -webkit-backdrop-filter: brightness(50%);
     backdrop-filter: brightness(50%);
     font-family: 'Noto Serif Display', serif;
     justify-content: space-around;
