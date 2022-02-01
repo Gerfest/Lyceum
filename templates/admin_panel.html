@@ -64,8 +64,8 @@
                         <td>{{ invitation.user }}</td>
                         <td>{{ invitation.user.first_name }} {{ invitation.user.last_name }}</td>
                         <td>{{ invitation.invitor.first_name }} {{ invitation.invitor.last_name }}</td>
-                        <td>{{ invitation.user.date_joined }}</td>
-                        <td>{{ invitation.user.last_login }}</td>
+                        <td>{{ invitation.user.date_joined|date:"Y.m.d H:i" }}</td>
+                        <td>{{ invitation.user.last_login|date:"Y.m.d H:i" }}</td>
                         <td>
                             {% if invitation.user.is_active %}
                                 -
